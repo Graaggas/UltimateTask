@@ -5,4 +5,11 @@ class Task {
   final int rating;
 
   Task({@required this.name, @required this.rating});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'rating': rating,
+    };
+  }
 }

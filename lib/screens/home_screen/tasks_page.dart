@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ultimate_task/misc/show_alert_dialog.dart';
+import 'package:ultimate_task/screens/home_screen/models/task.dart';
 import 'package:ultimate_task/service/auth.dart';
 import 'package:ultimate_task/service/database.dart';
 
@@ -29,10 +30,9 @@ class TasksPage extends StatelessWidget {
 
   Future<void> _createTask(BuildContext context) async {
     final database = Provider.of<Database>(context, listen: false);
-    await database.createTask({
-      'name': 'Test Test',
-      'rating': 3,
-    });
+    await database.createTask(
+      Task(name: "test01", rating: 10),
+    );
   }
 
   @override
