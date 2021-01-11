@@ -31,7 +31,7 @@ class TasksPage extends StatelessWidget {
   Future<void> _createTask(BuildContext context) async {
     final database = Provider.of<Database>(context, listen: false);
     await database.createTask(
-      Task(name: "test01", rating: 10),
+      Task(name: "test031", rating: 10),
     );
   }
 
