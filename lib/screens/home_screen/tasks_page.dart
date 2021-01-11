@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ultimate_task/misc/show_alert_dialog.dart';
 import 'package:ultimate_task/service/auth.dart';
+import 'package:ultimate_task/service/database.dart';
 
-class HomePage extends StatelessWidget {
+class TasksPage extends StatelessWidget {
   Future<void> _signOut(BuildContext context) async {
     try {
       final auth = Provider.of<AuthBase>(context, listen: false);
@@ -26,11 +27,19 @@ class HomePage extends StatelessWidget {
     }
   }
 
+  Future<void> _createTask(BuildContext context) async {
+    final database = Provider.of<Database>(context, listen: false);
+    await database.createTask({
+      'name': 'Test Test',
+      'rating': 3,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home Page'),
+        title: Text('Ultimate Task'),
         centerTitle: true,
         actions: <Widget>[
           FlatButton(
@@ -44,6 +53,10 @@ class HomePage extends StatelessWidget {
             onPressed: () => _confirmSignOut(context),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => _createTask(context),
       ),
     );
   }

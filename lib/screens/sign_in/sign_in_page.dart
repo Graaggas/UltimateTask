@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ultimate_task/misc/errors.dart';
-import 'package:ultimate_task/misc/show_alert_dialog.dart';
 import 'package:ultimate_task/misc/show_exception_dialog.dart';
 import 'package:ultimate_task/screens/sign_in/email_sign_in_page.dart';
 import 'package:ultimate_task/screens/sign_in/sign_in_manager.dart';

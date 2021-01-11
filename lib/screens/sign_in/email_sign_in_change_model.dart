@@ -35,14 +35,14 @@ class EmailSignInChangeModel with EmailAndPasswordValidators, ChangeNotifier {
 
   String get primaryButtonText {
     return formType == EmailSignInFormType.signIn
-        ? 'Sign in'
-        : 'Create an account';
+        ? 'Войти'
+        : 'Создать учетную запись';
   }
 
   String get secondaryButtonText {
     return formType == EmailSignInFormType.signIn
-        ? 'Need an account? Register'
-        : 'Have an account? Sign in';
+        ? 'Регистрация новой учетной записи'
+        : 'Войти с помощью учетной записи';
   }
 
   bool get canSubmit {

@@ -64,12 +64,11 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   }
 
   List<Widget> _buildChildren() {
-    final primaryText = _formType == EmailSignInFormType.signIn
-        ? 'Sign in'
-        : 'Create an account';
+    final primaryText =
+        _formType == EmailSignInFormType.signIn ? 'Войти' : 'Создать акаунт';
     final secondaryText = _formType == EmailSignInFormType.signIn
-        ? 'Need an account? Register'
-        : 'Have an account? Sign in';
+        ? 'Нет акаунта? Зарегистрироваться'
+        : 'Есть акаунт? Войти';
 
     bool submitEnabled = widget.emailValidator.isValid(_email) &&
         widget.passwordValidator.isValid(_password) &&

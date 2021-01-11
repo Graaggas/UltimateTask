@@ -20,6 +20,10 @@ String errorsCheck(String error) {
     print("=> $error");
     return "Пароль должен быть больше 5 символов";
   }
+  if (error.contains('network_error')) {
+    print("=> $error");
+    return "Нет доступа к сети Интернет";
+  }
   print("=> $error");
   return "NULL";
 }

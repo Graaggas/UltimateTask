@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ultimate_task/screens/home_screen/home-page.dart';
+import 'package:ultimate_task/screens/home_screen/tasks_page.dart';
 import 'package:ultimate_task/screens/sign_in/sign_in_page.dart';
 import 'package:ultimate_task/service/auth.dart';
+import 'package:ultimate_task/service/database.dart';
 
 class LandingPage extends StatelessWidget {
   static const routeName = '/landingPage';
@@ -19,17 +21,13 @@ class LandingPage extends StatelessWidget {
           //* получаем данные о пользователе
           final User user = snapshot.data;
 
-          //print('~ uid is ${user?.uid}');
-
           if (user == null) {
-            //Navigator.of(context).pushNamed(SignInPage.routeName, arguments: auth);
-
             return SignInPage.create(context);
-          } else {
-            // Navigator.of(context).pushNamed(HomeScreen.routeName);
-            // return HomeScreen();
-            return HomePage();
           }
+          return Provider<Database>(
+            create: (_) => FirestoreDatabase(uid: user.uid),
+            child: TasksPage(),
+          );
         }
         return Scaffold(
           body: Center(
