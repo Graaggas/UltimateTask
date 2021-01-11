@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ultimate_task/misc/show_aler_dialog.dart';
+import 'package:ultimate_task/misc/show_alert_dialog.dart';
 import 'package:ultimate_task/service/auth.dart';
 
 class HomePage extends StatelessWidget {

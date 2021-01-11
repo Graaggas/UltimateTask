@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ultimate_task/misc/errors.dart';
+import 'package:ultimate_task/misc/show_alert_dialog.dart';
 import 'package:ultimate_task/screens/sign_in/sign_in_manager.dart';
 import 'package:ultimate_task/service/auth.dart';
 
@@ -41,7 +43,36 @@ class SignInPage extends StatelessWidget {
     try {
       await manager.signInWithGoogle();
     } catch (e) {
-      print("~~~~~~> " + e.toString());
+      //print("~~~~~~> " + e.toString());
+      showAlertDialog(
+        context,
+        title: 'Ошибка аутентификации',
+        content: errorsCheck(e.toString()),
+        cancelActionText: null,
+        defaultActionText: 'Отмена',
+      );
+      // showDialog(
+      //     context: context,
+      //     builder: (context) {
+      //       return AlertDialog(
+      //         title: Text(
+      //           'Ошибка аутентификации',
+      //           textAlign: TextAlign.center,
+      //         ),
+      //         content: Text(
+      //           errorsCheck(e.toString()),
+      //           textAlign: TextAlign.center,
+      //         ),
+      //         actions: <Widget>[
+      //           FlatButton(
+      //             onPressed: Navigator.of(context).pop,
+      //             child: Text(
+      //               'OK',
+      //             ),
+      //           ),
+      //         ],
+      //       );
+      //     });
     }
   }
 
