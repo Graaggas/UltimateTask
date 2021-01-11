@@ -19,7 +19,7 @@ class LandingPage extends StatelessWidget {
           //* получаем данные о пользователе
           final User user = snapshot.data;
 
-          print('~ uid is ${user?.uid}');
+          //print('~ uid is ${user?.uid}');
 
           if (user == null) {
             //Navigator.of(context).pushNamed(SignInPage.routeName, arguments: auth);

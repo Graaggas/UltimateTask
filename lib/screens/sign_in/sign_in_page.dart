@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ultimate_task/misc/errors.dart';
 import 'package:ultimate_task/misc/show_alert_dialog.dart';
+import 'package:ultimate_task/misc/show_exception_dialog.dart';
+import 'package:ultimate_task/screens/sign_in/email_sign_in_page.dart';
 import 'package:ultimate_task/screens/sign_in/sign_in_manager.dart';
 import 'package:ultimate_task/service/auth.dart';
 
@@ -24,13 +26,11 @@ class SignInPage extends StatelessWidget {
         builder: (_, isLoadingNotifier, __) => Provider<SignInManager>(
           create: (_) =>
               SignInManager(auth: auth, isLoading: isLoadingNotifier),
-          //* обязательно должен быть dispose
-          // dispose: (_, bloc) => bloc.dispose(),
           //* consumer помогает прокинуть данные в конструктор
           child: Consumer<SignInManager>(
             child: SignInPage(),
-            builder: (_, bloc, __) => SignInPage(
-              manager: bloc,
+            builder: (_, manager, __) => SignInPage(
+              manager: manager,
               isLoading: isLoadingNotifier.value,
             ),
           ),
@@ -44,36 +44,21 @@ class SignInPage extends StatelessWidget {
       await manager.signInWithGoogle();
     } catch (e) {
       //print("~~~~~~> " + e.toString());
-      showAlertDialog(
+      showExceptionAlertDialog(
         context,
         title: 'Ошибка аутентификации',
-        content: errorsCheck(e.toString()),
-        cancelActionText: null,
-        defaultActionText: 'Отмена',
+        exception: e,
       );
-      // showDialog(
-      //     context: context,
-      //     builder: (context) {
-      //       return AlertDialog(
-      //         title: Text(
-      //           'Ошибка аутентификации',
-      //           textAlign: TextAlign.center,
-      //         ),
-      //         content: Text(
-      //           errorsCheck(e.toString()),
-      //           textAlign: TextAlign.center,
-      //         ),
-      //         actions: <Widget>[
-      //           FlatButton(
-      //             onPressed: Navigator.of(context).pop,
-      //             child: Text(
-      //               'OK',
-      //             ),
-      //           ),
-      //         ],
-      //       );
-      //     });
     }
+  }
+
+  void _signInWithEmail(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        fullscreenDialog: true,
+        builder: (context) => EmailSignInPage(),
+      ),
+    );
   }
 
   @override
@@ -139,7 +124,8 @@ class SignInPage extends StatelessWidget {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {}, //,
+                    onPressed:
+                        isLoading ? null : () => _signInWithEmail(context), //,
                     child: Text('Войти с помощью email'),
                     style: ElevatedButton.styleFrom(
                       primary: Colors.amber,
