@@ -16,7 +16,7 @@ class FirestoreDatabase implements Database {
   final _service = FireStoreService.instance;
 
   Future<void> createTask(Task task) => _service.setData(
-        path: APIpath.task(uid, 'task002'),
+        path: APIpath.task(uid, task.id),
         data: task.toMap(),
       );
 

@@ -4,6 +4,7 @@ import 'package:ultimate_task/misc/show_alert_dialog.dart';
 import 'package:ultimate_task/screens/home_screen/models/task.dart';
 import 'package:ultimate_task/service/auth.dart';
 import 'package:ultimate_task/service/database.dart';
+import 'package:uuid/uuid.dart';
 
 class TasksPage extends StatelessWidget {
   Future<void> _signOut(BuildContext context) async {
@@ -31,7 +32,11 @@ class TasksPage extends StatelessWidget {
   Future<void> _createTask(BuildContext context) async {
     final database = Provider.of<Database>(context, listen: false);
     await database.createTask(
-      Task(name: "test0ыфыв1", rating: 10),
+      Task(
+        name: "testing",
+        rating: 10,
+        id: Uuid().v4(),
+      ),
     );
   }
 
