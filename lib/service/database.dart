@@ -21,12 +21,9 @@ class FirestoreDatabase implements Database {
     final path = APIpath.tasks(uid);
     final reference = FirebaseFirestore.instance.collection(path);
     final snapshots = reference.snapshots();
-    return snapshots.map((snapshot) => snapshot.docs.map((e) {
-          final data = e.data();
-          return data != null
-              ? Task(name: data['name'], rating: data['rating'])
-              : null;
-        }).toList());
+    return snapshots.map((snapshot) => snapshot.docs
+        .map((snapshot) => Task.fromMap(snapshot.data()))
+        .toList());
   }
 
   Future<void> _setData({String path, Map<String, dynamic> data}) async {
