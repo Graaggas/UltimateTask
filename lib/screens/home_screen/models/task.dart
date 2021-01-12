@@ -1,20 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Task {
   final String memo;
   final String id;
-  DateTime creationDate;
-  DateTime doingDate;
-  DateTime lastEditDate;
-  Color color;
+  Timestamp creationDate;
+  Timestamp doingDate;
+  Timestamp lastEditDate;
+  //MaterialColor color;
   bool outOfDate;
   bool isDeleted;
 
   Task({
     @required this.id,
     @required this.memo,
-    @required this.color,
+    // @required this.color,
     @required this.creationDate,
     @required this.doingDate,
     @required this.isDeleted,
@@ -28,10 +29,10 @@ class Task {
     }
     final String memo = data['memo'];
     final String id = data['id'];
-    final DateTime creationDate = data['creationDate'];
-    final DateTime doingDate = data['doingDate'];
-    final DateTime lastEditDate = data['lastEditDate'];
-    final Color color = data['color'];
+    final Timestamp creationDate = data['creationDate'];
+    final Timestamp doingDate = data['doingDate'];
+    final Timestamp lastEditDate = data['lastEditDate'];
+    //final MaterialColor color = data['color'];
     final bool outOfDate = data['outOfDate'];
     final bool isDeleted = data['isDeleted'];
     return Task(
@@ -40,7 +41,7 @@ class Task {
       creationDate: creationDate,
       doingDate: doingDate,
       lastEditDate: lastEditDate,
-      color: color,
+      //color: color,
       outOfDate: outOfDate,
       isDeleted: isDeleted,
     );
@@ -53,7 +54,7 @@ class Task {
       'creationDate': creationDate,
       'doingDate': doingDate,
       'lastEditDate': lastEditDate,
-      'color': color,
+      //'color': color,
       'outOfDate': outOfDate,
       'isDeleted': isDeleted,
     };

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ultimate_task/misc/show_alert_dialog.dart';
@@ -33,8 +34,15 @@ class TasksPage extends StatelessWidget {
     final database = Provider.of<Database>(context, listen: false);
     await database.createTask(
       Task(
-        memo: "testing",
+        memo: "testing1",
         id: Uuid().v4(),
+        //TODO почему-то с данными ниже не сохраняются данные
+        //color: Colors.amber,
+        outOfDate: true,
+        creationDate: Timestamp.fromDate(DateTime.now()),
+        doingDate: Timestamp.fromDate(DateTime.now()),
+        isDeleted: true,
+        lastEditDate: Timestamp.fromDate(DateTime.now()),
       ),
     );
   }
