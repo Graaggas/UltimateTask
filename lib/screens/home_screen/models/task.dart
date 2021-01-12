@@ -1,31 +1,61 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class Task {
-  final String name;
-  final int rating;
+  final String memo;
   final String id;
+  DateTime creationDate;
+  DateTime doingDate;
+  DateTime lastEditDate;
+  Color color;
+  bool outOfDate;
+  bool isDeleted;
 
-  Task({@required this.id, @required this.name, @required this.rating});
+  Task({
+    @required this.id,
+    @required this.memo,
+    @required this.color,
+    @required this.creationDate,
+    @required this.doingDate,
+    @required this.isDeleted,
+    @required this.lastEditDate,
+    @required this.outOfDate,
+  });
 
   factory Task.fromMap(Map<String, dynamic> data) {
     if (data == null) {
       return null;
     }
-    final String name = data['name'];
-    final int rating = data['rating'];
+    final String memo = data['memo'];
     final String id = data['id'];
+    final DateTime creationDate = data['creationDate'];
+    final DateTime doingDate = data['doingDate'];
+    final DateTime lastEditDate = data['lastEditDate'];
+    final Color color = data['color'];
+    final bool outOfDate = data['outOfDate'];
+    final bool isDeleted = data['isDeleted'];
     return Task(
-      name: name,
-      rating: rating,
+      memo: memo,
       id: id,
+      creationDate: creationDate,
+      doingDate: doingDate,
+      lastEditDate: lastEditDate,
+      color: color,
+      outOfDate: outOfDate,
+      isDeleted: isDeleted,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'name': name,
-      'rating': rating,
+      'memo': memo,
       'id': id,
+      'creationDate': creationDate,
+      'doingDate': doingDate,
+      'lastEditDate': lastEditDate,
+      'color': color,
+      'outOfDate': outOfDate,
+      'isDeleted': isDeleted,
     };
   }
 }

@@ -33,8 +33,7 @@ class TasksPage extends StatelessWidget {
     final database = Provider.of<Database>(context, listen: false);
     await database.createTask(
       Task(
-        name: "testing",
-        rating: 10,
+        memo: "testing",
         id: Uuid().v4(),
       ),
     );
@@ -69,7 +68,7 @@ class TasksPage extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final tasks = snapshot.data;
-          final children = tasks.map((e) => Text(e.name)).toList();
+          final children = tasks.map((e) => Text(e.memo)).toList();
           return ListView(children: children);
         }
         if (snapshot.hasError) {
