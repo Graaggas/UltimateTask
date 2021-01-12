@@ -8,14 +8,16 @@ class Task {
   Timestamp creationDate;
   Timestamp doingDate;
   Timestamp lastEditDate;
-  //MaterialColor color;
+  //TODO DELETE BELOW
+  MaterialColor color;
   bool outOfDate;
   bool isDeleted;
 
   Task({
     @required this.id,
     @required this.memo,
-    // @required this.color,
+    //TODO DELETE BELOW
+    @required this.color,
     @required this.creationDate,
     @required this.doingDate,
     @required this.isDeleted,
