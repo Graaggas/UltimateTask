@@ -5,6 +5,7 @@ import 'package:ultimate_task/service/api_path.dart';
 
 abstract class Database {
   Future<void> createTask(Task task);
+  Stream<List<Task>> tasksStream();
 }
 
 class FirestoreDatabase implements Database {
@@ -12,9 +13,21 @@ class FirestoreDatabase implements Database {
   FirestoreDatabase({@required this.uid}) : assert(uid != null);
 
   Future<void> createTask(Task task) => _setData(
-        path: APIpath.task(uid, 'task001'),
+        path: APIpath.task(uid, 'task002'),
         data: task.toMap(),
       );
+
+  Stream<List<Task>> tasksStream() {
+    final path = APIpath.tasks(uid);
+    final reference = FirebaseFirestore.instance.collection(path);
+    final snapshots = reference.snapshots();
+    return snapshots.map((snapshot) => snapshot.docs.map((e) {
+          final data = e.data();
+          return data != null
+              ? Task(name: data['name'], rating: data['rating'])
+              : null;
+        }).toList());
+  }
 
   Future<void> _setData({String path, Map<String, dynamic> data}) async {
     final reference = FirebaseFirestore.instance.doc(path);
