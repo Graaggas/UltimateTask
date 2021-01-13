@@ -8,15 +8,13 @@ class Task {
   Timestamp creationDate;
   Timestamp doingDate;
   Timestamp lastEditDate;
-  //TODO DELETE BELOW
-  MaterialColor color;
+  String color;
   bool outOfDate;
   bool isDeleted;
 
   Task({
     @required this.id,
     @required this.memo,
-    //TODO DELETE BELOW
     @required this.color,
     @required this.creationDate,
     @required this.doingDate,
@@ -34,7 +32,7 @@ class Task {
     final Timestamp creationDate = data['creationDate'];
     final Timestamp doingDate = data['doingDate'];
     final Timestamp lastEditDate = data['lastEditDate'];
-    //final MaterialColor color = data['color'];
+    final String color = data['color'];
     final bool outOfDate = data['outOfDate'];
     final bool isDeleted = data['isDeleted'];
     return Task(
@@ -43,7 +41,7 @@ class Task {
       creationDate: creationDate,
       doingDate: doingDate,
       lastEditDate: lastEditDate,
-      //color: color,
+      color: color,
       outOfDate: outOfDate,
       isDeleted: isDeleted,
     );
@@ -56,7 +54,7 @@ class Task {
       'creationDate': creationDate,
       'doingDate': doingDate,
       'lastEditDate': lastEditDate,
-      //'color': color,
+      'color': color,
       'outOfDate': outOfDate,
       'isDeleted': isDeleted,
     };

@@ -7,6 +7,18 @@ import 'package:ultimate_task/service/auth.dart';
 import 'package:ultimate_task/service/database.dart';
 import 'package:uuid/uuid.dart';
 
+extension ColorExtension on String {
+  toColor() {
+    var hexColor = this.replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    if (hexColor.length == 8) {
+      return Color(int.parse("0x$hexColor"));
+    }
+  }
+}
+
 class TasksPage extends StatelessWidget {
   Future<void> _signOut(BuildContext context) async {
     try {
@@ -32,12 +44,12 @@ class TasksPage extends StatelessWidget {
 
   Future<void> _createTask(BuildContext context) async {
     final database = Provider.of<Database>(context, listen: false);
+
     await database.createTask(
       Task(
         memo: "testing1",
         id: Uuid().v4(),
-        //TODO почему-то с данными ниже не сохраняются данные
-        //color: Colors.amber,
+        color: '84FFFF',
         outOfDate: true,
         creationDate: Timestamp.fromDate(DateTime.now()),
         doingDate: Timestamp.fromDate(DateTime.now()),
@@ -50,7 +62,9 @@ class TasksPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthBase>(context, listen: false);
+
     return Scaffold(
+      // backgroundColor: '84FFFF'.toColor(),
       appBar: AppBar(
         title: Text('Ultimate Task'),
         centerTitle: true,
