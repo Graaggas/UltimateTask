@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ultimate_task/misc/show_alert_dialog.dart';
 import 'package:ultimate_task/screens/home_screen/models/task.dart';
+import 'package:ultimate_task/screens/home_screen/tasks/add_task_page.dart';
 import 'package:ultimate_task/service/auth.dart';
 import 'package:ultimate_task/service/database.dart';
 import 'package:uuid/uuid.dart';
@@ -42,22 +43,22 @@ class TasksPage extends StatelessWidget {
     }
   }
 
-  Future<void> _createTask(BuildContext context) async {
-    final database = Provider.of<Database>(context, listen: false);
+  // Future<void> _createTask(BuildContext context) async {
+  //   final database = Provider.of<Database>(context, listen: false);
 
-    await database.createTask(
-      Task(
-        memo: "testing1",
-        id: Uuid().v4(),
-        color: '84FFFF',
-        outOfDate: true,
-        creationDate: Timestamp.fromDate(DateTime.now()),
-        doingDate: Timestamp.fromDate(DateTime.now()),
-        isDeleted: true,
-        lastEditDate: Timestamp.fromDate(DateTime.now()),
-      ),
-    );
-  }
+  //   await database.createTask(
+  //     Task(
+  //       memo: "testing1",
+  //       id: Uuid().v4(),
+  //       color: '84FFFF',
+  //       outOfDate: true,
+  //       creationDate: Timestamp.fromDate(DateTime.now()),
+  //       doingDate: Timestamp.fromDate(DateTime.now()),
+  //       isDeleted: true,
+  //       lastEditDate: Timestamp.fromDate(DateTime.now()),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +78,7 @@ class TasksPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () => _createTask(context),
+        onPressed: () => AddTaskPage.show(context),
       ),
       body: _buildContexts(context),
     );
