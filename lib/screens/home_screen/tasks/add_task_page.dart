@@ -60,7 +60,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         : Container(
             child: Card(
               elevation: 4,
-              color: Colors.teal[100],
+              color: Colors.white.withOpacity(0.9),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -109,7 +109,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
       maxLines: null,
       cursorColor: Colors.red,
       textAlign: TextAlign.justify,
-      decoration: InputDecoration(
+      decoration: InputDecoration.collapsed(
         hintStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
         hintText: 'Текст новой задачи...',
       ),
@@ -176,9 +176,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
         },
         customBorder: CircleBorder(),
         child: Container(
-          height: 50,
+          height: 30,
           width: 50,
-          margin: EdgeInsets.all(10.0),
+          //margin: EdgeInsets.all(10.0),
           decoration: BoxDecoration(
               border: Border.all(color: Colors.black38),
               color: myColor,
