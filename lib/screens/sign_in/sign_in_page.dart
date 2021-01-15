@@ -1,5 +1,8 @@
+import 'dart:math';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ultimate_task/misc/constants.dart';
 import 'package:ultimate_task/misc/show_exception_dialog.dart';
 import 'package:ultimate_task/screens/sign_in/email_sign_in_page.dart';
 import 'package:ultimate_task/screens/sign_in/sign_in_manager.dart';
@@ -62,12 +65,12 @@ class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Ultimate Task"),
-        centerTitle: true,
-        elevation: 4,
-      ),
-      backgroundColor: Colors.grey[300],
+      // appBar: AppBar(
+      //   title: Text("Ultimate Task"),
+      //   centerTitle: true,
+      //   elevation: 4,
+      // ),
+      backgroundColor: Color(myBackgroundColor),
       body: buildBody(context),
     );
   }
@@ -82,61 +85,156 @@ class SignInPage extends StatelessWidget {
         : Stack(
             // padding: const EdgeInsets.all(8.0),
             children: <Widget>[
-              Container(
-                height: MediaQuery.of(context).size.height * 0.7,
-                width: MediaQuery.of(context).size.width,
-                child: BlueContainer(),
+              buildHeaderBlueLightCircle(),
+              buildHeaderRedBox(),
+              buildHeaderMintCircle(),
+              buildHeaderBlueBox(),
+              Positioned(
+                child: Text(
+                  "Ultimate",
+                  style: GoogleFonts.aclonica(
+                    textStyle: TextStyle(
+                        color: Color(myBackgroundColor), fontSize: 48),
+                  ),
+                ),
+                top: 50,
+                left: 20,
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                //crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height / 20,
+              Positioned(
+                child: Text(
+                  "Task",
+                  style: GoogleFonts.aclonica(
+                    textStyle: TextStyle(
+                        color: Color(myBackgroundColor), fontSize: 48),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Добро пожаловать",
-                        style: TextStyle(
-                          fontSize: MediaQuery.of(context).size.height / 25,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _signInWithGoogle(context),
-                    child: Text('Войти с помощью Google'),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.deepOrange[800],
-                      onPrimary: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32.0),
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed:
-                        isLoading ? null : () => _signInWithEmail(context), //,
-                    child: Text('Войти с помощью email'),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.amber,
-                      onPrimary: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32.0),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
+                top: 100,
+                left: 85,
               ),
+
+              // Container(
+              //   height: MediaQuery.of(context).size.height * 0.7,
+              //   width: MediaQuery.of(context).size.width,
+              //   child: BlueContainer(),
+              // ),
+              // Column(
+              //   mainAxisAlignment: MainAxisAlignment.start,
+              //   //crossAxisAlignment: CrossAxisAlignment.stretch,
+              //   children: <Widget>[
+              //     SizedBox(
+              //       height: MediaQuery.of(context).size.height / 20,
+              //     ),
+              //     Row(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: [
+              //         Text(
+              //           "Добро пожаловать",
+              //           style: TextStyle(
+              //             fontSize: MediaQuery.of(context).size.height / 25,
+              //             fontWeight: FontWeight.bold,
+              //             color: Colors.white,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //     SizedBox(
+              //       height: 15,
+              //     ),
+              //     ElevatedButton(
+              //       onPressed: () => _signInWithGoogle(context),
+              //       child: Text('Войти с помощью Google'),
+              //       style: ElevatedButton.styleFrom(
+              //         primary: Colors.deepOrange[800],
+              //         onPrimary: Colors.white,
+              //         shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(32.0),
+              //         ),
+              //       ),
+              //     ),
+              //     ElevatedButton(
+              //       onPressed:
+              //           isLoading ? null : () => _signInWithEmail(context), //,
+              //       child: Text('Войти с помощью email'),
+              //       style: ElevatedButton.styleFrom(
+              //         primary: Colors.amber,
+              //         onPrimary: Colors.black,
+              //         shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(32.0),
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
             ],
           );
+  }
+
+  Positioned buildHeaderRedBox() {
+    return Positioned(
+      top: -150,
+      right: -270,
+      child: Transform.rotate(
+        angle: pi / 2.1,
+        child: Container(
+          height: 400,
+          width: 400,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(35),
+            color: Color(myRedColor),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Positioned buildHeaderBlueBox() {
+    return Positioned(
+      top: -300,
+      left: -200,
+      child: Transform.rotate(
+        angle: pi / 7,
+        child: Container(
+          height: 500,
+          width: 500,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(125),
+            color: Color(myBlueColor),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Positioned buildHeaderMintCircle() {
+    return Positioned(
+      top: -20,
+      right: 20,
+      child: Container(
+        height: 200,
+        width: 200,
+        decoration: BoxDecoration(
+          //borderRadius: BorderRadius.circular(125),
+          color: Color(myMintColor),
+          shape: BoxShape.circle,
+        ),
+      ),
+    );
+  }
+
+  Positioned buildHeaderBlueLightCircle() {
+    return Positioned(
+      top: -100,
+      right: -40,
+      child: Container(
+        height: 350,
+        width: 350,
+        decoration: BoxDecoration(
+          //borderRadius: BorderRadius.circular(125),
+          color: Color(myBlueLightColor),
+          shape: BoxShape.circle,
+        ),
+      ),
+    );
   }
 }
 

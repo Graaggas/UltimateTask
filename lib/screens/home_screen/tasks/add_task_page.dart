@@ -18,6 +18,25 @@ class _AddTaskPageState extends State<AddTaskPage> {
   bool isColorCirclesVisible = false;
   Color currentColor = Colors.white;
 
+  final _formKey = GlobalKey<FormState>();
+
+  String _memo;
+
+  bool _validateAndSaveForm() {
+    final form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
+  }
+
+  void _submit() {
+    if (_validateAndSaveForm()) {
+      print("form saved with $_memo");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +50,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
             onPressed: null,
           ),
           IconButton(
-              icon: Icon(Icons.save, color: Colors.white), onPressed: null),
+            icon: Icon(Icons.save, color: Colors.white),
+            onPressed: _submit,
+          ),
         ],
       ),
       body: _buildContest(),
@@ -88,6 +109,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   Widget _buildForm() {
     return Form(
+      key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: _buildFormChildren(),
@@ -106,9 +128,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
   TextFormField _buildTextFieldForMemo() {
     return TextFormField(
       keyboardType: TextInputType.multiline,
+      validator: (value) => value.isNotEmpty ? null : 'Введите текст задачи...',
       maxLines: null,
       cursorColor: Colors.red,
       textAlign: TextAlign.justify,
+      onSaved: (value) => _memo = value,
       decoration: InputDecoration.collapsed(
         hintStyle: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
         hintText: 'Текст новой задачи...',

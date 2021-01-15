@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Ultimate Task',
-        theme: ThemeData(primarySwatch: Colors.teal),
+        // theme: ThemeData(primarySwatch: Colors.teal),
         home: LandingPage(),
       ),
     );
