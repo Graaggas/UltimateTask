@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -66,9 +67,8 @@ class SignInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: AppBar(
-      //   title: Text("Ultimate Task"),
-      //   centerTitle: true,
-      //   elevation: 4,
+      //   elevation: 0,
+      //   backgroundColor: Color(myBackgroundColor),
       // ),
       backgroundColor: Color(myBackgroundColor),
       body: buildBody(context),
@@ -78,95 +78,207 @@ class SignInPage extends StatelessWidget {
   Widget buildBody(BuildContext context) {
     return isLoading
         ? Scaffold(
+            backgroundColor: Color(myBackgroundColor),
             body: Center(
               child: CircularProgressIndicator(),
             ),
           )
-        : Stack(
-            // padding: const EdgeInsets.all(8.0),
-            children: <Widget>[
-              buildHeaderBlueLightCircle(),
-              buildHeaderRedBox(),
-              buildHeaderMintCircle(),
-              buildHeaderBlueBox(),
-              Positioned(
-                child: Text(
-                  "Ultimate",
-                  style: GoogleFonts.aclonica(
-                    textStyle: TextStyle(
-                        color: Color(myBackgroundColor), fontSize: 48),
-                  ),
+        : Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              buildHeader(),
+              Expanded(
+                flex: 5,
+                child: Column(
+                  children: [
+                    Text(
+                      "Добро пожаловать!",
+                      style: GoogleFonts.merriweatherSans(
+                        textStyle: TextStyle(
+                            color: Color(myBlackLightColor), fontSize: 32),
+                      ),
+                    ),
+                    Text(
+                      "Воспользуйтесь одним из методов аутентификации",
+                      style: GoogleFonts.merriweatherSans(
+                        textStyle: TextStyle(color: Colors.black, fontSize: 10),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    RaisedButton.icon(
+                      elevation: 4,
+                      color: Color(myBlueColor),
+                      onPressed: () => _signInWithGoogle(context),
+                      icon: SvgPicture.asset('assets\icons\search.png'),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                      label: Text(
+                        "Google",
+                        style: GoogleFonts.merriweatherSans(
+                          textStyle:
+                              TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ),
+                    ),
+                    RaisedButton.icon(
+                      elevation: 4,
+                      color: Color(myAlmostWhiteColor),
+                      onPressed: () => _signInWithEmail(context),
+                      icon: SvgPicture.asset('assets\icons\search.png'),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                      label: Text(
+                        "E-mail",
+                        style: GoogleFonts.merriweatherSans(
+                          textStyle:
+                              TextStyle(color: Colors.black, fontSize: 16),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                top: 50,
-                left: 20,
-              ),
-              Positioned(
-                child: Text(
-                  "Task",
-                  style: GoogleFonts.aclonica(
-                    textStyle: TextStyle(
-                        color: Color(myBackgroundColor), fontSize: 48),
-                  ),
-                ),
-                top: 100,
-                left: 85,
               ),
 
-              // Container(
-              //   height: MediaQuery.of(context).size.height * 0.7,
-              //   width: MediaQuery.of(context).size.width,
-              //   child: BlueContainer(),
+              //   child: Text(
+              //     "Добро пожаловать!",
+              //     style: GoogleFonts.merriweatherSans(
+              //       textStyle: TextStyle(
+              //           color: Color(myBlackLightColor), fontSize: 24),
+              //     ),
+              //   ),
               // ),
-              // Column(
-              //   mainAxisAlignment: MainAxisAlignment.start,
-              //   //crossAxisAlignment: CrossAxisAlignment.stretch,
-              //   children: <Widget>[
-              //     SizedBox(
-              //       height: MediaQuery.of(context).size.height / 20,
+              // Expanded(
+              //   child: Text(
+              //     "Воспользуйтесь одним из методов аутентификации",
+              //     style: GoogleFonts.merriweatherSans(
+              //       textStyle: TextStyle(color: Colors.black, fontSize: 12),
               //     ),
-              //     Row(
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       children: [
-              //         Text(
-              //           "Добро пожаловать",
-              //           style: TextStyle(
-              //             fontSize: MediaQuery.of(context).size.height / 25,
-              //             fontWeight: FontWeight.bold,
-              //             color: Colors.white,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //     SizedBox(
-              //       height: 15,
-              //     ),
-              //     ElevatedButton(
-              //       onPressed: () => _signInWithGoogle(context),
-              //       child: Text('Войти с помощью Google'),
-              //       style: ElevatedButton.styleFrom(
-              //         primary: Colors.deepOrange[800],
-              //         onPrimary: Colors.white,
-              //         shape: RoundedRectangleBorder(
-              //           borderRadius: BorderRadius.circular(32.0),
-              //         ),
-              //       ),
-              //     ),
-              //     ElevatedButton(
-              //       onPressed:
-              //           isLoading ? null : () => _signInWithEmail(context), //,
-              //       child: Text('Войти с помощью email'),
-              //       style: ElevatedButton.styleFrom(
-              //         primary: Colors.amber,
-              //         onPrimary: Colors.black,
-              //         shape: RoundedRectangleBorder(
-              //           borderRadius: BorderRadius.circular(32.0),
-              //         ),
-              //       ),
-              //     ),
-              //   ],
+              //   ),
+              // ),
+              // Expanded(
+              //   child: ElevatedButton(
+              //     onPressed: () {},
+              //     child: Text("Google"),
+              //   ),
+              // ),
+              // Expanded(
+              //   child: ElevatedButton(
+              //     onPressed: () {},
+              //     child: Text("Email"),
+              //   ),
               // ),
             ],
           );
+    // : Stack(
+    //     children: <Widget>[
+    //       buildHeaderBlueLightCircle(),
+    //       buildHeaderRedBox(),
+    //       buildHeaderMintCircle(),
+    //       buildHeaderBlueBox(),
+    //       buildHeaderUltimate(),
+    //       buildHeaderTask(),
+
+    //       // Container(
+    //       //   height: MediaQuery.of(context).size.height * 0.7,
+    //       //   width: MediaQuery.of(context).size.width,
+    //       //   child: BlueContainer(),
+    //       // ),
+    //       // Column(
+    //       //   mainAxisAlignment: MainAxisAlignment.start,
+    //       //   //crossAxisAlignment: CrossAxisAlignment.stretch,
+    //       //   children: <Widget>[
+    //       //     SizedBox(
+    //       //       height: MediaQuery.of(context).size.height / 20,
+    //       //     ),
+    //       //     Row(
+    //       //       mainAxisAlignment: MainAxisAlignment.center,
+    //       //       children: [
+    //       //         Text(
+    //       //           "Добро пожаловать",
+    //       //           style: TextStyle(
+    //       //             fontSize: MediaQuery.of(context).size.height / 25,
+    //       //             fontWeight: FontWeight.bold,
+    //       //             color: Colors.white,
+    //       //           ),
+    //       //         ),
+    //       //       ],
+    //       //     ),
+    //       //     SizedBox(
+    //       //       height: 15,
+    //       //     ),
+    //       //     ElevatedButton(
+    //       //       onPressed: () => _signInWithGoogle(context),
+    //       //       child: Text('Войти с помощью Google'),
+    //       //       style: ElevatedButton.styleFrom(
+    //       //         primary: Colors.deepOrange[800],
+    //       //         onPrimary: Colors.white,
+    //       //         shape: RoundedRectangleBorder(
+    //       //           borderRadius: BorderRadius.circular(32.0),
+    //       //         ),
+    //       //       ),
+    //       //     ),
+    //       //     ElevatedButton(
+    //       //       onPressed:
+    //       //           isLoading ? null : () => _signInWithEmail(context), //,
+    //       //       child: Text('Войти с помощью email'),
+    //       //       style: ElevatedButton.styleFrom(
+    //       //         primary: Colors.amber,
+    //       //         onPrimary: Colors.black,
+    //       //         shape: RoundedRectangleBorder(
+    //       //           borderRadius: BorderRadius.circular(32.0),
+    //       //         ),
+    //       //       ),
+    //       //     ),
+    //       //   ],
+    //       // ),
+    //     ],
+    //   );
+  }
+
+  Expanded buildHeader() {
+    return Expanded(
+      flex: 5,
+      child: Stack(
+        children: <Widget>[
+          buildHeaderBlueLightCircle(),
+          buildHeaderRedBox(),
+          buildHeaderMintCircle(),
+          buildHeaderBlueBox(),
+          buildHeaderUltimate(),
+          buildHeaderTask(),
+        ],
+      ),
+    );
+  }
+
+  Positioned buildHeaderTask() {
+    return Positioned(
+      child: Text(
+        "Task",
+        style: GoogleFonts.aclonica(
+          textStyle: TextStyle(color: Color(myBackgroundColor), fontSize: 48),
+        ),
+      ),
+      top: 100,
+      left: 85,
+    );
+  }
+
+  Positioned buildHeaderUltimate() {
+    return Positioned(
+      child: Text(
+        "Ultimate",
+        style: GoogleFonts.aclonica(
+          textStyle: TextStyle(color: Color(myBackgroundColor), fontSize: 48),
+        ),
+      ),
+      top: 50,
+      left: 20,
+    );
   }
 
   Positioned buildHeaderRedBox() {
