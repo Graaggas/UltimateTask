@@ -31,7 +31,7 @@ dependencies:
   firebase_core: ^0.5.3
   firebase_auth: ^0.18.4+1
   google_sign_in: ^4.5.6
-  flutter_svg: ^0.19.1
+  flutter_svg: ^0.19.2+1
   
 
 
@@ -48,6 +48,11 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  assets:
+   - assets/icons/bird.svg
+   - assets/icons/oval.svg
+   - assets/icons/Gplus.svg
+   - assets/icons/mail.svg
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

@@ -91,54 +91,13 @@ class SignInPage extends StatelessWidget {
                 flex: 5,
                 child: Column(
                   children: [
-                    Text(
-                      "Добро пожаловать!",
-                      style: GoogleFonts.merriweatherSans(
-                        textStyle: TextStyle(
-                            color: Color(myBlackLightColor), fontSize: 32),
-                      ),
-                    ),
-                    Text(
-                      "Воспользуйтесь одним из методов аутентификации",
-                      style: GoogleFonts.merriweatherSans(
-                        textStyle: TextStyle(color: Colors.black, fontSize: 10),
-                      ),
-                    ),
+                    buildWelcomeText(),
+                    buildHelpText(),
                     SizedBox(
                       height: 10,
                     ),
-                    RaisedButton.icon(
-                      elevation: 4,
-                      color: Color(myBlueColor),
-                      onPressed: () => _signInWithGoogle(context),
-                      icon: SvgPicture.asset('assets\icons\search.png'),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      label: Text(
-                        "Google",
-                        style: GoogleFonts.merriweatherSans(
-                          textStyle:
-                              TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                      ),
-                    ),
-                    RaisedButton.icon(
-                      elevation: 4,
-                      color: Color(myAlmostWhiteColor),
-                      onPressed: () => _signInWithEmail(context),
-                      icon: SvgPicture.asset('assets\icons\search.png'),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      label: Text(
-                        "E-mail",
-                        style: GoogleFonts.merriweatherSans(
-                          textStyle:
-                              TextStyle(color: Colors.black, fontSize: 16),
-                        ),
-                      ),
-                    ),
+                    buildGoogleButton(context),
+                    buildEmailButton(context),
                   ],
                 ),
               ),
@@ -239,6 +198,97 @@ class SignInPage extends StatelessWidget {
     //   );
   }
 
+  ElevatedButton buildEmailButton(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: () => _signInWithEmail(context),
+      style: ElevatedButton.styleFrom(
+          primary: Color(myMintColor),
+          elevation: 4,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8)))),
+      icon: Container(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            SvgPicture.asset(
+              'assets/icons/oval.svg',
+              color: Colors.blue,
+              height: 25,
+              width: 25,
+            ),
+            SvgPicture.asset(
+              'assets/icons/mail.svg',
+              height: 10,
+              width: 10,
+              color: Colors.white,
+            ),
+          ],
+        ),
+      ),
+      // SvgPicture.asset('assets/icons/email.svg'),
+      label: Text(
+        "E-Mail",
+        style: GoogleFonts.alice(
+          textStyle: TextStyle(color: Colors.black, fontSize: 18),
+        ),
+      ),
+    );
+  }
+
+  ElevatedButton buildGoogleButton(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: () => _signInWithGoogle(context),
+      style: ElevatedButton.styleFrom(
+          primary: Color(myBlueLightColor),
+          elevation: 4,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8)))),
+      icon: Container(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            SvgPicture.asset(
+              'assets/icons/oval.svg',
+              color: Colors.red,
+              height: 25,
+              width: 25,
+            ),
+            SvgPicture.asset(
+              'assets/icons/Gplus.svg',
+              height: 10,
+              width: 10,
+              color: Colors.white,
+            ),
+          ],
+        ),
+      ),
+      label: Text(
+        "Google",
+        style: GoogleFonts.alice(
+          textStyle: TextStyle(color: Colors.black, fontSize: 18),
+        ),
+      ),
+    );
+  }
+
+  Text buildHelpText() {
+    return Text(
+      "Воспользуйтесь одним из методов аутентификации",
+      style: GoogleFonts.alice(
+        textStyle: TextStyle(color: Colors.black, fontSize: 12),
+      ),
+    );
+  }
+
+  Text buildWelcomeText() {
+    return Text(
+      "Добро пожаловать!",
+      style: GoogleFonts.alice(
+        textStyle: TextStyle(color: Color(myBlackLightColor), fontSize: 32),
+      ),
+    );
+  }
+
   Expanded buildHeader() {
     return Expanded(
       flex: 5,
@@ -259,8 +309,8 @@ class SignInPage extends StatelessWidget {
     return Positioned(
       child: Text(
         "Task",
-        style: GoogleFonts.aclonica(
-          textStyle: TextStyle(color: Color(myBackgroundColor), fontSize: 48),
+        style: GoogleFonts.alice(
+          textStyle: TextStyle(color: Color(myBackgroundColor), fontSize: 56),
         ),
       ),
       top: 100,
@@ -272,8 +322,8 @@ class SignInPage extends StatelessWidget {
     return Positioned(
       child: Text(
         "Ultimate",
-        style: GoogleFonts.aclonica(
-          textStyle: TextStyle(color: Color(myBackgroundColor), fontSize: 48),
+        style: GoogleFonts.alice(
+          textStyle: TextStyle(color: Color(myBackgroundColor), fontSize: 56),
         ),
       ),
       top: 50,

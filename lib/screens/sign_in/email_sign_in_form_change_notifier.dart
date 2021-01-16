@@ -79,7 +79,7 @@ class _EmailSignInFormChangeNotifierState
           onPressed: model.canSubmit ? _submit : null,
           child: Text(model.primaryButtonText)),
       SizedBox(height: 8.0),
-      FlatButton(
+      TextButton(
         child: Text(model.secondaryButtonText),
         onPressed: !model.isLoading ? _toggleFormType : null,
       ),
