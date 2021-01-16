@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:ultimate_task/misc/constants.dart';
 import 'package:ultimate_task/misc/show_exception_dialog.dart';
 import 'package:ultimate_task/screens/sign_in/email_sign_in_change_model.dart';
 import 'package:ultimate_task/service/auth.dart';
@@ -72,15 +74,30 @@ class _EmailSignInFormChangeNotifierState
   List<Widget> _buildChildren() {
     return [
       _buildEmailTextField(),
-      SizedBox(height: 8.0),
+      SizedBox(height: 20.0),
       _buildPasswordTextField(),
-      SizedBox(height: 8.0),
+      SizedBox(height: 10.0),
       ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              primary: Color(myBlueLightColor),
+              elevation: 4,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8)))),
           onPressed: model.canSubmit ? _submit : null,
-          child: Text(model.primaryButtonText)),
-      SizedBox(height: 8.0),
+          child: Text(
+            model.primaryButtonText,
+            style: GoogleFonts.alice(
+              textStyle: TextStyle(color: Colors.black, fontSize: 22),
+            ),
+          )),
+      SizedBox(height: 2.0),
       TextButton(
-        child: Text(model.secondaryButtonText),
+        child: Text(
+          model.secondaryButtonText,
+          style: GoogleFonts.alice(
+            textStyle: TextStyle(color: Colors.black, fontSize: 16),
+          ),
+        ),
         onPressed: !model.isLoading ? _toggleFormType : null,
       ),
     ];
@@ -91,9 +108,27 @@ class _EmailSignInFormChangeNotifierState
       controller: _passwordController,
       focusNode: _passwordFocusNode,
       decoration: InputDecoration(
-        labelText: 'Password',
+        prefixIcon: Icon(
+          Icons.keyboard,
+          color: Colors.black38,
+        ),
+        labelText: 'Пароль',
         errorText: model.passwordErrorText,
         enabled: model.isLoading == false,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black26),
+          borderRadius: BorderRadius.all(
+            Radius.circular(35),
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black26),
+          borderRadius: BorderRadius.all(
+            Radius.circular(35),
+          ),
+        ),
+        labelStyle: TextStyle(
+            color: _passwordFocusNode.hasFocus ? Colors.black : Colors.black),
       ),
       obscureText: true,
       textInputAction: TextInputAction.done,
@@ -107,8 +142,27 @@ class _EmailSignInFormChangeNotifierState
       controller: _emailController,
       focusNode: _emailFocusNode,
       decoration: InputDecoration(
+        prefixIcon: Icon(
+          Icons.email,
+          color: Colors.black38,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black26),
+          borderRadius: BorderRadius.all(
+            Radius.circular(35),
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black26),
+          borderRadius: BorderRadius.all(
+            Radius.circular(35),
+          ),
+        ),
         labelText: 'Email',
-        hintText: 'test@test.com',
+        labelStyle: TextStyle(
+            color: _emailFocusNode.hasFocus ? Colors.black : Colors.black),
+        contentPadding: EdgeInsets.all(10),
+        // hintText: 'test@test.com',
         errorText: model.emailErrorText,
         enabled: model.isLoading == false,
       ),
