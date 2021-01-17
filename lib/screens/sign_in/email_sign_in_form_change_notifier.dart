@@ -108,6 +108,7 @@ class _EmailSignInFormChangeNotifierState
       controller: _passwordController,
       focusNode: _passwordFocusNode,
       decoration: InputDecoration(
+        contentPadding: EdgeInsets.all(10),
         prefixIcon: Icon(
           Icons.keyboard,
           color: Colors.black38,

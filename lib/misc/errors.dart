@@ -24,6 +24,10 @@ String errorsCheck(String error) {
     print("=> $error");
     return "Нет доступа к сети Интернет";
   }
+  if (error.contains('address is already in use by another')) {
+    print("=> $error");
+    return "Такой адрес уже используется другой учетной записью";
+  }
   print("=> $error");
   return "NULL";
 }
