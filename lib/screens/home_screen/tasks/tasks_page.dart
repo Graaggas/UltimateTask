@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:ultimate_task/misc/constants.dart';
 import 'package:ultimate_task/misc/show_alert_dialog.dart';
 import 'package:ultimate_task/screens/home_screen/models/task.dart';
 import 'package:ultimate_task/screens/home_screen/tasks/add_task_page.dart';
@@ -30,6 +32,7 @@ class TasksPage extends StatelessWidget {
     }
   }
 
+  //TODO дизайн showAlertDialog
   Future<void> _confirmSignOut(BuildContext context, String user) async {
     final didRequestSignOut = await showAlertDialog(
       context,
@@ -65,18 +68,29 @@ class TasksPage extends StatelessWidget {
     final auth = Provider.of<AuthBase>(context, listen: false);
 
     return Scaffold(
-      // backgroundColor: '84FFFF'.toColor(),
+      backgroundColor: Color(myBackgroundColor),
       appBar: AppBar(
-        title: Text('Ultimate Task'),
+        elevation: 0,
+        backgroundColor: Color(myBackgroundColor),
+        title: Text(
+          'Ultimate Task',
+          style: GoogleFonts.alice(
+            textStyle: TextStyle(color: Colors.black, fontSize: 22),
+          ),
+        ),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: Icon(
+              Icons.logout,
+              color: Colors.black,
+            ),
             onPressed: () => _confirmSignOut(context, auth.currentUser.email),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(myBlueColor),
         child: Icon(Icons.add),
         onPressed: () => AddTaskPage.show(context),
       ),

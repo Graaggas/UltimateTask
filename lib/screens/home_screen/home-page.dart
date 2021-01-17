@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
         title: Text('Home Page'),
         centerTitle: true,
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text(
               'Logout',
               style: TextStyle(

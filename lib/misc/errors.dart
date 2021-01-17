@@ -28,6 +28,10 @@ String errorsCheck(String error) {
     print("=> $error");
     return "Такой адрес уже используется другой учетной записью";
   }
+  if (error.contains('Sign in is aborted by user')) {
+    print("=> $error");
+    return "Регистрация отменена пользователем";
+  }
   print("=> $error");
   return "NULL";
 }
