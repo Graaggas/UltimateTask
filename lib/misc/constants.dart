@@ -1,5 +1,6 @@
 //final myBackgroundColor = 0xFFe4fff9;
 final myBackgroundColor = 0xFFAEE8E4;
+final myDarkMintColor = 0xFF00848C;
 final myBlueColor = 0xFF0260e8;
 final myMintColor = 0xFFb5fbdd;
 final myRedColor = 0xFFff756b;

@@ -1,10 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:ultimate_task/misc/constants.dart';
+import 'package:ultimate_task/screens/home_screen/models/task.dart';
+import 'package:ultimate_task/service/database.dart';
+import 'package:uuid/uuid.dart';
 
 class AddTaskPage extends StatefulWidget {
+  final Database database;
+
+  const AddTaskPage({Key key, this.database}) : super(key: key);
+
+  //* контекст берется из taskPage, потому как show запускается именно оттуда.
   static Future<void> show(BuildContext context) async {
+    final database = Provider.of<Database>(context, listen: false);
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => AddTaskPage(),
+        builder: (context) => AddTaskPage(
+          database: database,
+        ),
         fullscreenDialog: true,
       ),
     );
@@ -15,6 +30,7 @@ class AddTaskPage extends StatefulWidget {
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
+  String uid = '';
   bool isColorCirclesVisible = false;
   Color currentColor = Colors.white;
 
@@ -31,27 +47,53 @@ class _AddTaskPageState extends State<AddTaskPage> {
     return false;
   }
 
-  void _submit() {
+  Future<void> _submit(String uid) async {
     if (_validateAndSaveForm()) {
-      print("form saved with $_memo");
+      final task = Task(
+        color: currentColor.toString(),
+        creationDate: Timestamp.fromDate(DateTime.now()),
+        doingDate: Timestamp.fromDate(DateTime.now()),
+        id: uid,
+        isDeleted: false,
+        lastEditDate: Timestamp.fromDate(DateTime.now()),
+        memo: _memo,
+        outOfDate: false,
+      );
+      await widget.database.createTask(task);
+      Navigator.of(context).pop();
     }
+  }
+
+  @override
+  void initState() {
+    uid = Uuid().v4();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Color(myBackgroundColor),
       appBar: AppBar(
-        elevation: 2.0,
-        title: Text("Новая задача"),
+        iconTheme: IconThemeData(
+          color: Colors.black, //change your color here
+        ),
+        elevation: 0,
+        backgroundColor: Color(myBackgroundColor),
+        title: Text(
+          "Новая задача",
+          style: GoogleFonts.alice(
+            textStyle: TextStyle(color: Colors.black, fontSize: 22),
+          ),
+        ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.calendar_today, color: Colors.white),
+            icon: Icon(Icons.calendar_today, color: Colors.black),
             onPressed: null,
           ),
           IconButton(
-            icon: Icon(Icons.save, color: Colors.white),
-            onPressed: _submit,
+            icon: Icon(Icons.save, color: Colors.black),
+            onPressed: () => _submit(uid),
           ),
         ],
       ),

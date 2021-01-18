@@ -10,6 +10,7 @@ class FireStoreService {
   Future<void> setData({String path, Map<String, dynamic> data}) async {
     final reference = FirebaseFirestore.instance.doc(path);
     await reference.set(data);
+    print("==> SAVED DATA: $data");
   }
 
   Stream<List<T>> collectionStream<T>({

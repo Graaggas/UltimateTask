@@ -90,7 +90,7 @@ class TasksPage extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(myBlueColor),
+        backgroundColor: Color(myDarkMintColor),
         child: Icon(Icons.add),
         onPressed: () => AddTaskPage.show(context),
       ),
@@ -106,6 +106,7 @@ class TasksPage extends StatelessWidget {
         if (snapshot.hasData) {
           final tasks = snapshot.data;
           final children = tasks.map((e) => Text(e.memo)).toList();
+          print("==> CHILDREN: ${children.length}");
           return ListView(children: children);
         }
         if (snapshot.hasError) {

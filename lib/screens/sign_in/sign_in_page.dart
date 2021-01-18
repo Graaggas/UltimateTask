@@ -254,9 +254,9 @@ class SignInPage extends StatelessWidget {
               width: 25,
             ),
             SvgPicture.asset(
-              'assets/icons/Gplus.svg',
-              height: 10,
-              width: 10,
+              'assets/icons/google.svg',
+              height: 14,
+              width: 14,
               color: Colors.white,
             ),
           ],
