@@ -1,47 +1,73 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:ultimate_task/misc/constants.dart';
 import 'package:ultimate_task/misc/converts.dart';
+import 'package:ultimate_task/misc/show_exception_dialog.dart';
 import 'package:ultimate_task/screens/home_screen/models/task.dart';
 import 'package:ultimate_task/service/database.dart';
-import 'package:uuid/uuid.dart';
 
-class AddTaskPage extends StatefulWidget {
+extension ColorExtension on String {
+  toColor() {
+    var hexColor = this.replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    if (hexColor.length == 8) {
+      return Color(int.parse("0x$hexColor"));
+    }
+  }
+}
+
+class EditTaskPage extends StatefulWidget {
   final Database database;
+  final Task task;
 
-  const AddTaskPage({Key key, this.database}) : super(key: key);
+  const EditTaskPage({Key key, this.database, this.task}) : super(key: key);
 
-  //* контекст берется из taskPage, потому как show запускается именно оттуда.
-  static Future<void> show(BuildContext context) async {
+  static Future<void> show(BuildContext context, {Task task}) async {
     final database = Provider.of<Database>(context, listen: false);
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => AddTaskPage(
-          database: database,
-        ),
+        builder: (context) => EditTaskPage(database: database, task: task),
         fullscreenDialog: true,
       ),
     );
   }
 
   @override
-  _AddTaskPageState createState() => _AddTaskPageState();
+  _EditTaskPageState createState() => _EditTaskPageState();
 }
 
-class _AddTaskPageState extends State<AddTaskPage> {
+class _EditTaskPageState extends State<EditTaskPage> {
+  final _textController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   String uid = '';
   bool isColorCirclesVisible = false;
   Color currentColor = Colors.white;
-
+  String _memo = "";
   Timestamp doingDate = Timestamp.fromDate(DateTime.now());
   Timestamp creationDate = Timestamp.fromDate(DateTime.now());
 
-  final _formKey = GlobalKey<FormState>();
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
 
-  String _memo;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.task != null) {
+      uid = widget.task.id;
+      _memo = widget.task.memo;
+      print("==>MEMO = ${widget.task.memo}");
+      doingDate = widget.task.doingDate;
+      creationDate = widget.task.creationDate;
+      currentColor = widget.task.color.toColor();
+    }
+  }
 
   bool _validateAndSaveForm() {
     final form = _formKey.currentState;
@@ -52,31 +78,27 @@ class _AddTaskPageState extends State<AddTaskPage> {
     return false;
   }
 
-  Future<void> _submit(String uid) async {
+  Future<void> _submit() async {
     if (_validateAndSaveForm()) {
-      final task = Task(
-        color: currentColor.toString(),
-        creationDate: Timestamp.fromDate(DateTime.now()),
-        doingDate: Timestamp.fromDate(DateTime.now()),
-        id: uid,
-        isDeleted: false,
-        lastEditDate: Timestamp.fromDate(DateTime.now()),
-        memo: _memo,
-        outOfDate: false,
-      );
-      await widget.database.createTask(task);
-      Navigator.of(context).pop();
+      try {
+        final tasks = await widget.database.tasksStream().first;
+        final allUids = tasks.map((task) => task.id).toList();
+        if (widget.task != null) {
+          allUids.remove(widget.task.id);
+        }
+      } on FirebaseException catch (e) {
+        showExceptionAlertDialog(
+          context,
+          title: 'Operation failed',
+          exception: e,
+        );
+      }
     }
   }
 
   @override
-  void initState() {
-    uid = Uuid().v4();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    _textController.text = widget.task.memo;
     return Scaffold(
       backgroundColor: Color(myBackgroundColor),
       appBar: AppBar(
@@ -86,7 +108,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         elevation: 0,
         backgroundColor: Color(myBackgroundColor),
         title: Text(
-          "Новая задача",
+          widget.task == null ? "Новая задача" : "Редактирование задачи",
           style: GoogleFonts.alice(
             textStyle: TextStyle(color: Colors.black, fontSize: 22),
           ),
@@ -98,15 +120,15 @@ class _AddTaskPageState extends State<AddTaskPage> {
           ),
           IconButton(
             icon: Icon(Icons.save, color: Colors.black),
-            onPressed: () => _submit(uid),
+            onPressed: () => _submit(),
           ),
         ],
       ),
-      body: _buildContest(),
+      body: buildContest(),
     );
   }
 
-  Widget _buildContest() {
+  Widget buildContest() {
     return SingleChildScrollView(
       child: Container(
         child: Padding(
@@ -174,6 +196,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   TextFormField _buildTextFieldForMemo() {
     return TextFormField(
+      controller: _textController,
       keyboardType: TextInputType.multiline,
       validator: (value) => value.isNotEmpty ? null : 'Введите текст задачи...',
       maxLines: null,

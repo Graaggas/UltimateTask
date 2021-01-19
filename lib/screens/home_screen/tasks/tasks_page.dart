@@ -6,6 +6,10 @@ import 'package:ultimate_task/misc/constants.dart';
 import 'package:ultimate_task/misc/show_alert_dialog.dart';
 import 'package:ultimate_task/screens/home_screen/models/task.dart';
 import 'package:ultimate_task/screens/home_screen/tasks/add_task_page.dart';
+import 'package:ultimate_task/screens/home_screen/tasks/edit_task_page.dart';
+import 'package:ultimate_task/screens/home_screen/tasks/empty_content.dart';
+import 'package:ultimate_task/screens/home_screen/tasks/list_items_builder.dart';
+import 'package:ultimate_task/screens/home_screen/tasks/task_list_tile.dart';
 import 'package:ultimate_task/service/auth.dart';
 import 'package:ultimate_task/service/database.dart';
 import 'package:uuid/uuid.dart';
@@ -103,14 +107,22 @@ class TasksPage extends StatelessWidget {
     return StreamBuilder<List<Task>>(
       stream: database.tasksStream(),
       builder: (context, snapshot) {
+        final tasks = snapshot.data;
         if (snapshot.hasData) {
-          final tasks = snapshot.data;
-          final children = tasks.map((e) => Text(e.memo)).toList();
-          print("==> CHILDREN: ${children.length}");
-          return ListView(children: children);
+          if (tasks.isNotEmpty) {
+            final children = tasks
+                .map((task) => TaskListTile(
+                      task: task,
+                      onTap: () => EditTaskPage.show(context, task: task),
+                    ))
+                .toList();
+            return ListView(children: children);
+          }
+
+          return EmptyContent();
         }
         if (snapshot.hasError) {
-          return Center(child: Text('StreamBuilder Error'));
+          return Center(child: Text('ERROR'));
         }
         return Center(child: CircularProgressIndicator());
       },
