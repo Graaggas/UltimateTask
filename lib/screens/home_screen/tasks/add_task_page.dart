@@ -55,7 +55,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   Future<void> _submit(String uid) async {
     if (_validateAndSaveForm()) {
       final task = Task(
-        color: currentColor.toString(),
+        color: convertColorToString(currentColor),
         creationDate: Timestamp.fromDate(DateTime.now()),
         doingDate: Timestamp.fromDate(DateTime.now()),
         id: uid,

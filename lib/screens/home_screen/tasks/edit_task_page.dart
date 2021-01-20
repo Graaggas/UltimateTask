@@ -110,7 +110,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
         title: Text(
           widget.task == null ? "Новая задача" : "Редактирование задачи",
           style: GoogleFonts.alice(
-            textStyle: TextStyle(color: Colors.black, fontSize: 22),
+            textStyle: TextStyle(color: Colors.black, fontSize: 18),
           ),
         ),
         actions: <Widget>[
@@ -165,7 +165,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
   Card _buildCardForMemo() {
     return Card(
       elevation: 8,
-      color: currentColor,
+      color: Color(int.parse(widget.task.color)),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
