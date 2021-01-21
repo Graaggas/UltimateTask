@@ -23,8 +23,8 @@ class TaskListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("==> COLOR IS ${task.color}");
-
+    print(
+        "/task_list/ task.memo = ${task.memo}, task.color = ${(task.color).toString()}");
     return Card(
       elevation: 6,
       color: Color(int.parse(task.color)),

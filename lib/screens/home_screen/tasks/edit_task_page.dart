@@ -47,8 +47,11 @@ class _EditTaskPageState extends State<EditTaskPage> {
   bool isColorCirclesVisible = false;
   Color currentColor = Colors.white;
   String _memo = "";
+  bool isDeleted = false;
+  bool outOfDate = false;
   Timestamp doingDate = Timestamp.fromDate(DateTime.now());
   Timestamp creationDate = Timestamp.fromDate(DateTime.now());
+  Timestamp lastEditDate = Timestamp.fromDate(DateTime.now());
 
   @override
   void dispose() {
@@ -61,10 +64,13 @@ class _EditTaskPageState extends State<EditTaskPage> {
     super.initState();
     if (widget.task != null) {
       uid = widget.task.id;
+      currentColor = Color(int.parse(widget.task.color));
+      print("==> initState /edit_task/ currentColor = $currentColor");
       _memo = widget.task.memo;
       print("==>MEMO = ${widget.task.memo}");
       doingDate = widget.task.doingDate;
       creationDate = widget.task.creationDate;
+      isDeleted = widget.task.isDeleted;
       currentColor = widget.task.color.toColor();
     }
   }
@@ -78,13 +84,29 @@ class _EditTaskPageState extends State<EditTaskPage> {
     return false;
   }
 
-  Future<void> _submit() async {
+  Future<void> _submit(Color currentColor) async {
     if (_validateAndSaveForm()) {
       try {
         final tasks = await widget.database.tasksStream().first;
         final allUids = tasks.map((task) => task.id).toList();
         if (widget.task != null) {
           allUids.remove(widget.task.id);
+          print(
+              "==> _submit /edit_task/ currentColor = ${currentColor.toString()}");
+          final newTask = Task(
+            color: convertColorToString(currentColor),
+            creationDate: creationDate,
+            doingDate: doingDate,
+            id: uid,
+            isDeleted: isDeleted,
+            lastEditDate: lastEditDate,
+            memo: _memo,
+            outOfDate: outOfDate,
+          );
+          print("==> _submit /edit_task/ newTask.color = ${newTask.color}");
+
+          await widget.database.setTask(newTask);
+          Navigator.of(context).pop();
         }
       } on FirebaseException catch (e) {
         showExceptionAlertDialog(
@@ -98,6 +120,9 @@ class _EditTaskPageState extends State<EditTaskPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("==> /edit_task/build");
+    currentColor = Color(int.parse(widget.task.color));
+    print("==> /edit_task/build currentColor = ${currentColor.toString()}");
     _textController.text = widget.task.memo;
     return Scaffold(
       backgroundColor: Color(myBackgroundColor),
@@ -120,7 +145,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
           ),
           IconButton(
             icon: Icon(Icons.save, color: Colors.black),
-            onPressed: () => _submit(),
+            onPressed: () => _submit(currentColor),
           ),
         ],
       ),
@@ -283,6 +308,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
         onTap: () {
           setState(() {
             currentColor = myColor;
+            widget.task.color = convertColorToString(currentColor);
           });
         },
         customBorder: CircleBorder(),

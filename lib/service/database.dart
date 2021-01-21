@@ -6,6 +6,7 @@ import 'package:ultimate_task/service/firestore_service.dart';
 abstract class Database {
   Future<void> createTask(Task task);
   Stream<List<Task>> tasksStream();
+  Future<void> setTask(Task task);
 }
 
 class FirestoreDatabase implements Database {
@@ -22,5 +23,10 @@ class FirestoreDatabase implements Database {
   Stream<List<Task>> tasksStream() => _service.collectionStream(
         path: APIpath.tasks(uid),
         builder: (data) => Task.fromMap(data),
+      );
+
+  Future<void> setTask(Task task) => _service.setData(
+        path: APIpath.task(uid, task.id),
+        data: task.toMap(),
       );
 }
