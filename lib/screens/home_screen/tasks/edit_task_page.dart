@@ -99,7 +99,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
             doingDate: doingDate,
             id: uid,
             isDeleted: isDeleted,
-            lastEditDate: lastEditDate,
+            lastEditDate: Timestamp.fromDate(DateTime.now()),
             memo: _memo,
             outOfDate: outOfDate,
           );
@@ -133,7 +133,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
         elevation: 0,
         backgroundColor: Color(myBackgroundColor),
         title: Text(
-          widget.task == null ? "Новая задача" : "Редактирование задачи",
+          widget.task == null ? "Новая задача" : "Редактирование",
           style: GoogleFonts.alice(
             textStyle: TextStyle(color: Colors.black, fontSize: 18),
           ),
@@ -213,6 +213,26 @@ class _EditTaskPageState extends State<EditTaskPage> {
 
   List<Widget> _buildFormChildren() {
     return [
+      Row(
+        children: [
+          Icon(
+            Icons.timer,
+            size: 15,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            "21.12.2021",
+            style: GoogleFonts.alice(
+              textStyle: TextStyle(color: Colors.black, fontSize: 14),
+            ),
+          ),
+        ],
+      ),
+      SizedBox(
+        height: 10,
+      ),
       _buildTextFieldForMemo(),
       _buildArrowForExpanding(),
       // _buildExpandableColorCircleField(),

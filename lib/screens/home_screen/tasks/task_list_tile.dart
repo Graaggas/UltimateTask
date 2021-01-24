@@ -39,11 +39,23 @@ class TaskListTile extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 InkWell(
-                  child: Text(
-                    "Срок выполнения: 21.12.2021",
-                    style: GoogleFonts.alice(
-                      textStyle: TextStyle(color: Colors.black, fontSize: 12),
-                    ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.timer,
+                        size: 15,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        "21.12.2021",
+                        style: GoogleFonts.alice(
+                          textStyle:
+                              TextStyle(color: Colors.black, fontSize: 14),
+                        ),
+                      ),
+                    ],
                   ),
                   onTap: onTap,
                 ),

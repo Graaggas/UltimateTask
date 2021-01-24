@@ -4,15 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ultimate_task/misc/constants.dart';
 import 'package:ultimate_task/misc/show_alert_dialog.dart';
+import 'package:ultimate_task/misc/show_exception_dialog.dart';
 import 'package:ultimate_task/screens/home_screen/models/task.dart';
 import 'package:ultimate_task/screens/home_screen/tasks/add_task_page.dart';
 import 'package:ultimate_task/screens/home_screen/tasks/edit_task_page.dart';
 import 'package:ultimate_task/screens/home_screen/tasks/empty_content.dart';
-import 'package:ultimate_task/screens/home_screen/tasks/list_items_builder.dart';
 import 'package:ultimate_task/screens/home_screen/tasks/task_list_tile.dart';
 import 'package:ultimate_task/service/auth.dart';
 import 'package:ultimate_task/service/database.dart';
-import 'package:uuid/uuid.dart';
 
 extension ColorExtension on String {
   toColor() {
@@ -26,6 +25,15 @@ extension ColorExtension on String {
   }
 }
 
+Future<void> _delete(BuildContext context, Task task) async {
+  try {
+    final database = Provider.of<Database>(context, listen: false);
+    await database.deleteTask(task);
+  } on FirebaseException catch (e) {
+    showExceptionAlertDialog(context, title: "Operation failed", exception: e);
+  }
+}
+
 class TasksPage extends StatelessWidget {
   Future<void> _signOut(BuildContext context) async {
     try {
@@ -36,7 +44,6 @@ class TasksPage extends StatelessWidget {
     }
   }
 
-  //TODO дизайн showAlertDialog
   Future<void> _confirmSignOut(BuildContext context, String user) async {
     final didRequestSignOut = await showAlertDialog(
       context,
@@ -111,9 +118,29 @@ class TasksPage extends StatelessWidget {
         if (snapshot.hasData) {
           if (tasks.isNotEmpty) {
             final children = tasks
-                .map((task) => TaskListTile(
-                      task: task,
-                      onTap: () => EditTaskPage.show(context, task: task),
+                .map((task) => Dismissible(
+                      background: Container(
+                        color: Colors.red,
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Icon(Icons.delete, color: Colors.white),
+                              SizedBox(
+                                width: 10,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      key: Key('task-${task.id}'),
+                      direction: DismissDirection.endToStart,
+                      onDismissed: (direction) => _delete(context, task),
+                      child: TaskListTile(
+                        task: task,
+                        onTap: () => EditTaskPage.show(context, task: task),
+                      ),
                     ))
                 .toList();
             return ListView(children: children);

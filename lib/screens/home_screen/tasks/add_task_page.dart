@@ -38,7 +38,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   Timestamp doingDate = Timestamp.fromDate(DateTime.now());
   Timestamp creationDate = Timestamp.fromDate(DateTime.now());
+  Timestamp lastEditDate = Timestamp.fromDate(DateTime.now());
 
+  String selectedDate = "";
   final _formKey = GlobalKey<FormState>();
 
   String _memo;
@@ -72,7 +74,23 @@ class _AddTaskPageState extends State<AddTaskPage> {
   @override
   void initState() {
     uid = Uuid().v4();
+    selectedDate = convertFromTimeStampToString(doingDate);
+
     super.initState();
+  }
+
+  _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2025),
+    );
+    if (picked != null && picked.toString() != selectedDate)
+      setState(() {
+        selectedDate = DateFormat("dd.MM.yyyy").format(picked).toString();
+        print("==> selectedDate = $selectedDate");
+      });
   }
 
   @override
@@ -94,7 +112,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.calendar_today, color: Colors.black),
-            onPressed: null,
+            onPressed: () => _selectDate(context),
           ),
           IconButton(
             icon: Icon(Icons.save, color: Colors.black),
@@ -202,7 +220,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 ),
               ),
               Text(
-                "Изменено: ${convertFromTimeStampToString(doingDate)}",
+                "Изменено:${convertFromTimeStampToString(lastEditDate)}",
                 style: GoogleFonts.alice(
                   textStyle: TextStyle(color: Colors.black, fontSize: 14),
                 ),
