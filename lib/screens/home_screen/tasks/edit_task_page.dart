@@ -6,6 +6,7 @@ import 'package:ultimate_task/misc/constants.dart';
 import 'package:ultimate_task/misc/converts.dart';
 import 'package:ultimate_task/misc/show_exception_dialog.dart';
 import 'package:ultimate_task/screens/home_screen/models/task.dart';
+import 'package:ultimate_task/screens/home_screen/tasks/color_circle_bloc.dart';
 import 'package:ultimate_task/service/database.dart';
 
 extension ColorExtension on String {
@@ -23,14 +24,18 @@ extension ColorExtension on String {
 class EditTaskPage extends StatefulWidget {
   final Database database;
   final Task task;
+  final ColorCircleBloc bloc;
 
-  const EditTaskPage({Key key, this.database, this.task}) : super(key: key);
+  const EditTaskPage({Key key, this.database, this.task, this.bloc})
+      : super(key: key);
 
   static Future<void> show(BuildContext context, {Task task}) async {
     final database = Provider.of<Database>(context, listen: false);
+    final bloc = Provider.of<ColorCircleBloc>(context, listen: false);
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => EditTaskPage(database: database, task: task),
+        builder: (context) =>
+            EditTaskPage(database: database, task: task, bloc: bloc),
         fullscreenDialog: true,
       ),
     );
@@ -56,6 +61,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
   @override
   void dispose() {
     _textController.dispose();
+    //widget.bloc.dispose();
     super.dispose();
   }
 
@@ -153,26 +159,57 @@ class _EditTaskPageState extends State<EditTaskPage> {
     );
   }
 
-  Widget buildContest() {
-    return SingleChildScrollView(
-      child: Container(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: <Widget>[
-              _buildCardForMemo(),
-              _buildContainerWithColorCircles()
-            ],
-          ),
-        ),
-      ),
-    );
+  StreamBuilder buildContest() {
+    return StreamBuilder(
+        initialData: false,
+        stream: widget.bloc.colorCircleStream,
+        builder: (context, snapshot) {
+          return SingleChildScrollView(
+            child: Container(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  children: <Widget>[
+                    _buildCardForMemo(snapshot.data),
+                    _buildContainerWithColorCircles(snapshot.data),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+    // return SingleChildScrollView(
+    //   child: Container(
+    //     child: Padding(
+    //       padding: const EdgeInsets.all(8),
+    //       child: Column(
+    //         children: <Widget>[
+    //           _buildCardForMemo(),
+    //           _buildContainerWithColorCircles()
+    //         ],
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 
-  Container _buildContainerWithColorCircles() {
-    return !isColorCirclesVisible
-        ? Container()
-        : Container(
+  Container _buildContainerWithColorCircles(bool flag) {
+    print('==> flag is $flag');
+    // return StreamBuilder(
+    //     initialData: false,
+    //     stream: widget.bloc.colorCircleStream,
+    //     builder: (context, snapshot) {
+    //       return snapshot.data == true
+    //           ? Container(
+    //               child: Card(
+    //                 child: Text("11"),
+    //               ),
+    //             )
+    //           : Container();
+    //     });
+
+    return flag
+        ? Container(
             child: Card(
               elevation: 4,
               color: Colors.white.withOpacity(0.9),
@@ -184,10 +221,27 @@ class _EditTaskPageState extends State<EditTaskPage> {
                 child: _buildExpandableColorCircleField(),
               ),
             ),
-          );
+          )
+        : Container();
+
+    // !isColorCirclesVisible
+    //     ? Container()
+    //     : Container(
+    //         child: Card(
+    //           elevation: 4,
+    //           color: Colors.white.withOpacity(0.9),
+    //           shape: RoundedRectangleBorder(
+    //             borderRadius: BorderRadius.circular(8),
+    //           ),
+    //           child: Padding(
+    //             padding: const EdgeInsets.all(16.0),
+    //             child: _buildExpandableColorCircleField(),
+    //           ),
+    //         ),
+    //       )
   }
 
-  Card _buildCardForMemo() {
+  Card _buildCardForMemo(bool flag) {
     return Card(
       elevation: 8,
       color: Color(int.parse(widget.task.color)),
@@ -196,22 +250,22 @@ class _EditTaskPageState extends State<EditTaskPage> {
       ),
       child: Padding(
         padding: const EdgeInsets.only(top: 16.0, right: 16, left: 16),
-        child: _buildForm(),
+        child: _buildForm(flag),
       ),
     );
   }
 
-  Widget _buildForm() {
+  Widget _buildForm(bool flag) {
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: _buildFormChildren(),
+        children: _buildFormChildren(flag),
       ),
     );
   }
 
-  List<Widget> _buildFormChildren() {
+  List<Widget> _buildFormChildren(bool flag) {
     return [
       Row(
         children: [
@@ -234,7 +288,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
         height: 10,
       ),
       _buildTextFieldForMemo(),
-      _buildArrowForExpanding(),
+      _buildArrowForExpanding(flag),
       // _buildExpandableColorCircleField(),
     ];
   }
@@ -255,7 +309,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
     );
   }
 
-  Container _buildArrowForExpanding() {
+  Container _buildArrowForExpanding(bool flag) {
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -277,21 +331,27 @@ class _EditTaskPageState extends State<EditTaskPage> {
               ),
             ],
           ),
-          !isColorCirclesVisible
+          !flag
               ? IconButton(
                   icon: Icon(Icons.arrow_drop_down),
                   onPressed: () {
-                    setState(() {
-                      isColorCirclesVisible = !isColorCirclesVisible;
-                    });
+                    print("==> try to sink .visible");
+                    widget.bloc.eventColorCircleSink
+                        .add(ColorCircleEvent.visible);
+                    // setState(() {
+                    //   isColorCirclesVisible = !isColorCirclesVisible;
+                    // });
                   },
                 )
               : IconButton(
                   icon: Icon(Icons.arrow_drop_up),
                   onPressed: () {
-                    setState(() {
-                      isColorCirclesVisible = !isColorCirclesVisible;
-                    });
+                    print("==> try to sink .invisible");
+                    widget.bloc.eventColorCircleSink
+                        .add(ColorCircleEvent.invisible);
+                    // setState(() {
+                    //   isColorCirclesVisible = !isColorCirclesVisible;
+                    // });
                   },
                 ),
         ],

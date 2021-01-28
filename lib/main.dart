@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ultimate_task/landing_page.dart';
+import 'package:ultimate_task/screens/home_screen/tasks/color_circle_bloc.dart';
 import 'package:ultimate_task/service/auth.dart';
 
 Future<void> main() async {
@@ -14,8 +15,11 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Provider<AuthBase>(
-      create: (context) => Auth(),
+    return MultiProvider(
+      providers: [
+        Provider<AuthBase>.value(value: Auth()),
+        Provider<ColorCircleBloc>.value(value: ColorCircleBloc()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Ultimate Task',
@@ -29,7 +33,7 @@ class MyApp extends StatelessWidget {
 // TODO ++ Сохранение при редактировании
 //TODO при сохранении дата изменения меняется
 //TODO снэкбар
-//TODO dismissable
+//TODO ++ dismissable
 //TODO выбор даты окончания
 //TODO придумать, где отображать дату окончания
 //TODO сортировка списка
