@@ -276,7 +276,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
             width: 5,
           ),
           Text(
-            "21.12.2021",
+            convertFromTimeStampToString(widget.task.doingDate),
             style: GoogleFonts.alice(
               textStyle: TextStyle(color: Colors.black, fontSize: 14),
             ),

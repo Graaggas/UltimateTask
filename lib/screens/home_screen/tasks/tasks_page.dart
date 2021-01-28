@@ -120,13 +120,16 @@ class TasksPage extends StatelessWidget {
             final children = tasks
                 .map((task) => Dismissible(
                       background: Container(
-                        color: Colors.red,
+                        color: Color(myBackgroundColor),
                         child: Padding(
                           padding: const EdgeInsets.all(15),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
-                              Icon(Icons.delete, color: Colors.white),
+                              Icon(
+                                Icons.delete,
+                                color: Colors.red,
+                              ),
                               SizedBox(
                                 width: 10,
                               ),
@@ -137,9 +140,12 @@ class TasksPage extends StatelessWidget {
                       key: Key('task-${task.id}'),
                       direction: DismissDirection.endToStart,
                       onDismissed: (direction) => _delete(context, task),
-                      child: TaskListTile(
-                        task: task,
-                        onTap: () => EditTaskPage.show(context, task: task),
+                      child: Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: TaskListTile(
+                          task: task,
+                          onTap: () => EditTaskPage.show(context, task: task),
+                        ),
                       ),
                     ))
                 .toList();

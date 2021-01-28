@@ -55,6 +55,9 @@ flutter:
    - assets/icons/Gplus.svg
    - assets/icons/mail.svg
    - assets/icons/google.svg
+   - assets/icons/clock.svg
+   - assets/icons/calendar.svg
+   - assets/icons/done.svg
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

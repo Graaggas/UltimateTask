@@ -40,7 +40,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   Timestamp creationDate = Timestamp.fromDate(DateTime.now());
   Timestamp lastEditDate = Timestamp.fromDate(DateTime.now());
 
-  String selectedDate = "";
+  DateTime selectedDate = DateTime.now();
   final _formKey = GlobalKey<FormState>();
 
   String _memo;
@@ -59,13 +59,18 @@ class _AddTaskPageState extends State<AddTaskPage> {
       final task = Task(
         color: convertColorToString(currentColor),
         creationDate: Timestamp.fromDate(DateTime.now()),
-        doingDate: Timestamp.fromDate(DateTime.now()),
+        doingDate: selectedDate == DateTime.now()
+            ? Timestamp.fromDate(DateTime.now())
+            : Timestamp.fromDate(selectedDate),
         id: uid,
         isDeleted: false,
         lastEditDate: Timestamp.fromDate(DateTime.now()),
         memo: _memo,
         outOfDate: false,
       );
+
+      print(
+          "saving doingDate:\t ${convertFromTimeStampToString(task.doingDate)}");
       await widget.database.createTask(task);
       Navigator.of(context).pop();
     }
@@ -74,21 +79,21 @@ class _AddTaskPageState extends State<AddTaskPage> {
   @override
   void initState() {
     uid = Uuid().v4();
-    selectedDate = convertFromTimeStampToString(doingDate);
+    // selectedDate = convertFromTimeStampToString(doingDate);
 
     super.initState();
   }
 
-  _selectDate(BuildContext context) async {
+  selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2025),
     );
-    if (picked != null && picked.toString() != selectedDate)
+    if (picked != null && picked != selectedDate)
       setState(() {
-        selectedDate = DateFormat("dd.MM.yyyy").format(picked).toString();
+        selectedDate = picked;
         print("==> selectedDate = $selectedDate");
       });
   }
@@ -112,7 +117,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.calendar_today, color: Colors.black),
-            onPressed: () => _selectDate(context),
+            onPressed: () => selectDate(context),
           ),
           IconButton(
             icon: Icon(Icons.save, color: Colors.black),
@@ -212,20 +217,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Создано: ${convertFromTimeStampToString(creationDate)}",
-                style: GoogleFonts.alice(
-                  textStyle: TextStyle(color: Colors.black, fontSize: 14),
-                ),
-              ),
-              Text(
-                "Изменено:${convertFromTimeStampToString(lastEditDate)}",
-                style: GoogleFonts.alice(
-                  textStyle: TextStyle(color: Colors.black, fontSize: 14),
-                ),
-              ),
-            ],
+            children: [],
           ),
           !isColorCirclesVisible
               ? IconButton(
