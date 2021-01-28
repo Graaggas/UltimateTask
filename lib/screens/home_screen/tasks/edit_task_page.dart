@@ -126,10 +126,9 @@ class _EditTaskPageState extends State<EditTaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("==> /edit_task/build");
     currentColor = Color(int.parse(widget.task.color));
-    print("==> /edit_task/build currentColor = ${currentColor.toString()}");
-    _textController.text = widget.task.memo;
+
+    _textController.text = _memo;
     return Scaffold(
       backgroundColor: Color(myBackgroundColor),
       appBar: AppBar(
@@ -387,6 +386,10 @@ class _EditTaskPageState extends State<EditTaskPage> {
       child: InkWell(
         onTap: () {
           setState(() {
+            print("==>1 memo: $_memo");
+            print("==>textController.text: ${_textController.text}");
+            _memo = _textController.text;
+            print("==>2 memo: $_memo");
             currentColor = myColor;
             widget.task.color = convertColorToString(currentColor);
           });
