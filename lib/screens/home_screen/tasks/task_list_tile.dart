@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:ultimate_task/misc/constants.dart';
 import 'package:ultimate_task/misc/converts.dart';
 import 'package:ultimate_task/screens/home_screen/models/task.dart';
+import 'package:ultimate_task/service/database.dart';
 
 extension ColorExtension on String {
   toColor() {
@@ -21,8 +23,10 @@ extension ColorExtension on String {
 class TaskListTile extends StatefulWidget {
   final Task task;
   final VoidCallback onTap;
+  final BuildContext context;
 
-  TaskListTile({Key key, this.task, this.onTap}) : super(key: key);
+  TaskListTile({Key key, this.task, this.onTap, this.context})
+      : super(key: key);
 
   @override
   _TaskListTileState createState() => _TaskListTileState();
@@ -31,20 +35,54 @@ class TaskListTile extends StatefulWidget {
 class _TaskListTileState extends State<TaskListTile> {
   DateTime selectedDate = DateTime.now();
 
+  Future<void> _taskFlagDeleted(String uid) async {
+    final database = Provider.of<Database>(context, listen: false);
+
+    final taskNew = Task(
+      color: widget.task.color,
+      creationDate: widget.task.creationDate,
+      doingDate: widget.task.doingDate,
+      id: uid,
+      isDeleted: true,
+      lastEditDate: widget.task.lastEditDate,
+      memo: widget.task.memo,
+      outOfDate: widget.task.outOfDate,
+    );
+
+    print("flag: ${taskNew.isDeleted.toString()}");
+    await database.createTask(taskNew);
+  }
+
   selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
     );
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
+
+        final database = Provider.of<Database>(context, listen: false);
+
+        final taskNew = Task(
+          color: widget.task.color,
+          creationDate: widget.task.creationDate,
+          doingDate: Timestamp.fromDate(selectedDate),
+          id: widget.task.id,
+          isDeleted: false,
+          lastEditDate: widget.task.lastEditDate,
+          memo: widget.task.memo,
+          outOfDate: widget.task.outOfDate,
+        );
+
+        print("newData: ${taskNew.doingDate.toString()}");
+        database.createTask(taskNew);
       });
 
     print("/selectDate/\t selectedDate:\t $selectedDate");
-    widget.task.doingDate = Timestamp.fromDate(selectedDate);
+    //widget.task.doingDate = Timestamp.fromDate(selectedDate);
     print(
         "/selectDate/\t task.doingDate:\t ${convertFromTimeStampToString(widget.task.doingDate)}");
   }
@@ -102,7 +140,8 @@ class _TaskListTileState extends State<TaskListTile> {
                   width: 30,
                 ),
                 InkWell(
-                  onTap: () => print("Done tapped"),
+                  onTap: () => _taskFlagDeleted(widget.task.id),
+                  // onTap: () => print("tapped"),
                   child: SvgPicture.asset(
                     'assets/icons/done.svg',
                     color: Colors.black54,

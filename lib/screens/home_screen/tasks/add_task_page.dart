@@ -88,8 +88,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
     final DateTime picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
     );
     if (picked != null && picked != selectedDate)
       setState(() {

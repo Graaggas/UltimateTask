@@ -116,8 +116,22 @@ class TasksPage extends StatelessWidget {
       builder: (context, snapshot) {
         final tasks = snapshot.data;
         if (snapshot.hasData) {
-          if (tasks.isNotEmpty) {
-            final children = tasks
+          final List<Task> doneTasks = [];
+          final List<Task> undoneTasks = [];
+
+          tasks.forEach((element) {
+            if (element.isDeleted == false) {
+              undoneTasks.add(element);
+              print("undone task memo: ${element.memo}");
+            } else {
+              doneTasks.add(element);
+            }
+          });
+
+          undoneTasks.sort((a, b) => a.doingDate.compareTo(b.doingDate));
+
+          if (undoneTasks.isNotEmpty) {
+            final children = undoneTasks
                 .map((task) => Dismissible(
                       background: Container(
                         color: Color(myBackgroundColor),
@@ -143,6 +157,7 @@ class TasksPage extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: TaskListTile(
+                          context: context,
                           task: task,
                           onTap: () => EditTaskPage.show(context, task: task),
                         ),
