@@ -13,7 +13,6 @@ import 'package:ultimate_task/screens/home_screen/tasks/empty_content.dart';
 import 'package:ultimate_task/screens/home_screen/tasks/task_list_tile.dart';
 import 'package:ultimate_task/service/auth.dart';
 import 'package:ultimate_task/service/database.dart';
-import 'package:flash/flash.dart';
 
 extension ColorExtension on String {
   toColor() {
@@ -27,10 +26,12 @@ extension ColorExtension on String {
   }
 }
 
-Future<void> _delete(BuildContext context, Task task) async {
+Future<void> _delete(
+    BuildContext context, Task task, bool isFinalDeleting) async {
   try {
     final database = Provider.of<Database>(context, listen: false);
-    showMessage(context, "Задача завершена");
+    showMessage(
+        context, isFinalDeleting ? "Задача удалена" : "Задача завершена");
     await database.deleteTask(task);
   } on FirebaseException catch (e) {
     showExceptionAlertDialog(context, title: "Operation failed", exception: e);
@@ -95,6 +96,11 @@ class _TasksPageState extends State<TasksPage> {
         centerTitle: true,
         actions: <Widget>[
           Switch(
+              // inactiveTrackColor: Color(myMintColor),
+              inactiveThumbColor: Color(myBackgroundColor),
+              inactiveTrackColor: Color(myBlackLightColor),
+              activeColor: Color(myBlueLightColor),
+              activeTrackColor: Color(myBlackLightColor),
               value: isSwitched,
               onChanged: (value) {
                 setState(() {
@@ -144,7 +150,8 @@ class _TasksPageState extends State<TasksPage> {
               ),
               key: Key('task-${task.id}'),
               direction: DismissDirection.endToStart,
-              onDismissed: (direction) => _delete(context, task),
+              onDismissed: (direction) =>
+                  _delete(context, task, isSwitched ? true : false),
               child: Padding(
                 padding: const EdgeInsets.all(3.0),
                 child: TaskListTile(

@@ -35,7 +35,7 @@ class TaskListTile extends StatefulWidget {
 class _TaskListTileState extends State<TaskListTile> {
   DateTime selectedDate = DateTime.now();
 
-  Future<void> _taskFlagDeleted(String uid) async {
+  Future<void> _taskFlagDeleted(String uid, bool flag) async {
     final database = Provider.of<Database>(context, listen: false);
 
     final taskNew = Task(
@@ -43,13 +43,12 @@ class _TaskListTileState extends State<TaskListTile> {
       creationDate: widget.task.creationDate,
       doingDate: widget.task.doingDate,
       id: uid,
-      isDeleted: true,
+      isDeleted: flag,
       lastEditDate: widget.task.lastEditDate,
       memo: widget.task.memo,
       outOfDate: widget.task.outOfDate,
     );
 
-    print("flag: ${taskNew.isDeleted.toString()}");
     await database.createTask(taskNew);
   }
 
@@ -77,23 +76,16 @@ class _TaskListTileState extends State<TaskListTile> {
           outOfDate: widget.task.outOfDate,
         );
 
-        print("newData: ${taskNew.doingDate.toString()}");
         database.createTask(taskNew);
       });
 
-    print("/selectDate/\t selectedDate:\t $selectedDate");
     //widget.task.doingDate = Timestamp.fromDate(selectedDate);
-    print(
-        "/selectDate/\t task.doingDate:\t ${convertFromTimeStampToString(widget.task.doingDate)}");
   }
 
   @override
   Widget build(BuildContext context) {
     selectedDate = DateTime.fromMillisecondsSinceEpoch(
         widget.task.doingDate.millisecondsSinceEpoch * 1000);
-
-    print(
-        "/task_list/ task.doingDate = ${widget.task.doingDate}, selectedDate = $selectedDate");
 
     return Card(
       //margin: EdgeInsets.all(10),
@@ -127,28 +119,38 @@ class _TaskListTileState extends State<TaskListTile> {
                   ),
                 ),
                 Spacer(),
-                InkWell(
-                  child: SvgPicture.asset(
-                    'assets/icons/calendar.svg',
-                    color: Colors.black54,
-                    height: 20,
-                    width: 20,
-                  ),
-                  onTap: () => selectDate(context),
-                ),
+                !widget.task.isDeleted
+                    ? InkWell(
+                        child: SvgPicture.asset(
+                          'assets/icons/calendar.svg',
+                          color: Colors.black54,
+                          height: 20,
+                          width: 20,
+                        ),
+                        onTap: () => selectDate(context),
+                      )
+                    : Container(),
                 SizedBox(
                   width: 30,
                 ),
                 InkWell(
-                  onTap: () => _taskFlagDeleted(widget.task.id),
-                  // onTap: () => print("tapped"),
-                  child: SvgPicture.asset(
-                    'assets/icons/done.svg',
-                    color: Colors.black54,
-                    height: 20,
-                    width: 20,
-                  ),
-                ),
+                    onTap: () => !widget.task.isDeleted
+                        ? _taskFlagDeleted(widget.task.id, true)
+                        : _taskFlagDeleted(widget.task.id, false),
+                    // onTap: () => print("tapped"),
+                    child: !widget.task.isDeleted
+                        ? SvgPicture.asset(
+                            'assets/icons/done.svg',
+                            color: Colors.black54,
+                            height: 20,
+                            width: 20,
+                          )
+                        : SvgPicture.asset(
+                            'assets/icons/fromtrash.svg',
+                            color: Colors.black54,
+                            height: 20,
+                            width: 20,
+                          )),
               ],
             ),
           ),
