@@ -34,7 +34,14 @@ Future<void> _delete(BuildContext context, Task task) async {
   }
 }
 
-class TasksPage extends StatelessWidget {
+class TasksPage extends StatefulWidget {
+  @override
+  _TasksPageState createState() => _TasksPageState();
+}
+
+class _TasksPageState extends State<TasksPage> {
+  bool isSwitched = false;
+
   Future<void> _signOut(BuildContext context) async {
     try {
       final auth = Provider.of<AuthBase>(context, listen: false);
@@ -57,23 +64,6 @@ class TasksPage extends StatelessWidget {
     }
   }
 
-  // Future<void> _createTask(BuildContext context) async {
-  //   final database = Provider.of<Database>(context, listen: false);
-
-  //   await database.createTask(
-  //     Task(
-  //       memo: "testing1",
-  //       id: Uuid().v4(),
-  //       color: '84FFFF',
-  //       outOfDate: true,
-  //       creationDate: Timestamp.fromDate(DateTime.now()),
-  //       doingDate: Timestamp.fromDate(DateTime.now()),
-  //       isDeleted: true,
-  //       lastEditDate: Timestamp.fromDate(DateTime.now()),
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthBase>(context, listen: false);
@@ -83,14 +73,31 @@ class TasksPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Color(myBackgroundColor),
-        title: Text(
-          'Ultimate Task',
-          style: GoogleFonts.alice(
-            textStyle: TextStyle(color: Colors.black, fontSize: 22),
-          ),
+        title: Column(
+          children: [
+            Text(
+              'Ultimate Task',
+              style: GoogleFonts.alice(
+                textStyle: TextStyle(color: Colors.black, fontSize: 22),
+              ),
+            ),
+            Text(
+              isSwitched ? "Завершенные задачи" : "Текущие задачи",
+              style: GoogleFonts.alice(
+                textStyle: TextStyle(color: Colors.black87, fontSize: 18),
+              ),
+            ),
+          ],
         ),
         centerTitle: true,
         actions: <Widget>[
+          Switch(
+              value: isSwitched,
+              onChanged: (value) {
+                setState(() {
+                  isSwitched = !isSwitched;
+                });
+              }),
           IconButton(
             icon: Icon(
               Icons.logout,
@@ -100,13 +107,53 @@ class TasksPage extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(myDarkMintColor),
-        child: Icon(Icons.add),
-        onPressed: () => AddTaskPage.show(context),
-      ),
+      floatingActionButton: !isSwitched
+          ? FloatingActionButton(
+              backgroundColor: Color(myDarkMintColor),
+              child: Icon(Icons.add),
+              onPressed: () => AddTaskPage.show(context),
+            )
+          : null,
       body: _buildContexts(context),
     );
+  }
+
+  List<Dismissible> getChildren(List tasks) {
+    final children = tasks
+        .map((task) => Dismissible(
+              background: Container(
+                color: Color(myBackgroundColor),
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              key: Key('task-${task.id}'),
+              direction: DismissDirection.endToStart,
+              onDismissed: (direction) => _delete(context, task),
+              child: Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: TaskListTile(
+                  context: context,
+                  task: task,
+                  onTap: () => EditTaskPage.show(context, task: task),
+                ),
+              ),
+            ))
+        .toList();
+
+    return children;
   }
 
   Widget _buildContexts(BuildContext context) {
@@ -122,52 +169,39 @@ class TasksPage extends StatelessWidget {
           tasks.forEach((element) {
             if (element.isDeleted == false) {
               undoneTasks.add(element);
-              print("undone task memo: ${element.memo}");
             } else {
               doneTasks.add(element);
             }
           });
 
           undoneTasks.sort((a, b) => a.doingDate.compareTo(b.doingDate));
+          doneTasks.sort((a, b) => a.doingDate.compareTo(b.doingDate));
 
-          if (undoneTasks.isNotEmpty) {
-            final children = undoneTasks
-                .map((task) => Dismissible(
-                      background: Container(
-                        color: Color(myBackgroundColor),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      key: Key('task-${task.id}'),
-                      direction: DismissDirection.endToStart,
-                      onDismissed: (direction) => _delete(context, task),
-                      child: Padding(
-                        padding: const EdgeInsets.all(3.0),
-                        child: TaskListTile(
-                          context: context,
-                          task: task,
-                          onTap: () => EditTaskPage.show(context, task: task),
-                        ),
-                      ),
-                    ))
-                .toList();
-            return ListView(children: children);
+          switch (isSwitched) {
+            case true:
+              if (doneTasks.isNotEmpty) {
+                final children = getChildren(doneTasks);
+
+                return ListView(children: children);
+              }
+              break;
+            case false:
+              if (undoneTasks.isNotEmpty) {
+                final children = getChildren(undoneTasks);
+
+                return ListView(children: children);
+              }
+              break;
+            default:
+              break;
           }
 
-          return EmptyContent();
+          return !isSwitched
+              ? EmptyContent()
+              : EmptyContent(
+                  title: 'Список завершенных задач пуст',
+                  message: '',
+                );
         }
         if (snapshot.hasError) {
           return Center(child: Text('ERROR'));
