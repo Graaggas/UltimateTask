@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:ultimate_task/misc/constants.dart';
 import 'package:ultimate_task/misc/show_alert_dialog.dart';
 import 'package:ultimate_task/misc/show_exception_dialog.dart';
+import 'package:ultimate_task/misc/show_message.dart';
 import 'package:ultimate_task/screens/home_screen/models/task.dart';
 import 'package:ultimate_task/screens/home_screen/tasks/add_task_page.dart';
 import 'package:ultimate_task/screens/home_screen/tasks/edit_task_page.dart';
@@ -12,6 +13,7 @@ import 'package:ultimate_task/screens/home_screen/tasks/empty_content.dart';
 import 'package:ultimate_task/screens/home_screen/tasks/task_list_tile.dart';
 import 'package:ultimate_task/service/auth.dart';
 import 'package:ultimate_task/service/database.dart';
+import 'package:flash/flash.dart';
 
 extension ColorExtension on String {
   toColor() {
@@ -28,6 +30,7 @@ extension ColorExtension on String {
 Future<void> _delete(BuildContext context, Task task) async {
   try {
     final database = Provider.of<Database>(context, listen: false);
+    showMessage(context, "Задача завершена");
     await database.deleteTask(task);
   } on FirebaseException catch (e) {
     showExceptionAlertDialog(context, title: "Operation failed", exception: e);

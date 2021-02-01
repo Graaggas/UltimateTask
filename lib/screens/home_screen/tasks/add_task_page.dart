@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:ultimate_task/misc/constants.dart';
 import 'package:ultimate_task/misc/converts.dart';
+import 'package:ultimate_task/misc/show_message.dart';
 import 'package:ultimate_task/screens/home_screen/models/task.dart';
 import 'package:ultimate_task/service/database.dart';
 import 'package:uuid/uuid.dart';
@@ -54,7 +55,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     return false;
   }
 
-  Future<void> _submit(String uid) async {
+  Future<void> _submit(String uid, BuildContext context) async {
     if (_validateAndSaveForm()) {
       final task = Task(
         color: convertColorToString(currentColor),
@@ -72,6 +73,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
       print(
           "saving doingDate:\t ${convertFromTimeStampToString(task.doingDate)}");
       await widget.database.createTask(task);
+      showMessage(context, "Задача создана");
       Navigator.of(context).pop();
     }
   }
@@ -121,7 +123,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
           ),
           IconButton(
             icon: Icon(Icons.save, color: Colors.black),
-            onPressed: () => _submit(uid),
+            onPressed: () => _submit(uid, context),
           ),
         ],
       ),
