@@ -18,16 +18,20 @@ class EmptyContent extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text(
-            title,
-            style: GoogleFonts.alice(
-              textStyle: TextStyle(color: Colors.black, fontSize: 24),
+          Center(
+            child: Text(
+              title,
+              style: GoogleFonts.alice(
+                textStyle: TextStyle(color: Colors.black, fontSize: 24),
+              ),
             ),
           ),
-          Text(
-            message,
-            style: GoogleFonts.alice(
-              textStyle: TextStyle(color: Colors.black, fontSize: 16),
+          Center(
+            child: Text(
+              message,
+              style: GoogleFonts.alice(
+                textStyle: TextStyle(color: Colors.black, fontSize: 16),
+              ),
             ),
           ),
         ],

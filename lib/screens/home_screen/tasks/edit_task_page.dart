@@ -46,6 +46,8 @@ class EditTaskPage extends StatefulWidget {
 }
 
 class _EditTaskPageState extends State<EditTaskPage> {
+  Timestamp selectedDate = Timestamp.fromDate(DateTime.now());
+
   final _textController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String uid = '';
@@ -71,13 +73,14 @@ class _EditTaskPageState extends State<EditTaskPage> {
     if (widget.task != null) {
       uid = widget.task.id;
       currentColor = Color(int.parse(widget.task.color));
-      print("==> initState /edit_task/ currentColor = $currentColor");
+
       _memo = widget.task.memo;
-      print("==>MEMO = ${widget.task.memo}");
+
       doingDate = widget.task.doingDate;
       creationDate = widget.task.creationDate;
       isDeleted = widget.task.isDeleted;
       currentColor = widget.task.color.toColor();
+      selectedDate = widget.task.doingDate;
     }
   }
 
@@ -97,19 +100,17 @@ class _EditTaskPageState extends State<EditTaskPage> {
         final allUids = tasks.map((task) => task.id).toList();
         if (widget.task != null) {
           allUids.remove(widget.task.id);
-          print(
-              "==> _submit /edit_task/ currentColor = ${currentColor.toString()}");
+
           final newTask = Task(
             color: convertColorToString(currentColor),
             creationDate: creationDate,
-            doingDate: doingDate,
+            doingDate: selectedDate,
             id: uid,
             isDeleted: isDeleted,
             lastEditDate: Timestamp.fromDate(DateTime.now()),
             memo: _memo,
             outOfDate: outOfDate,
           );
-          print("==> _submit /edit_task/ newTask.color = ${newTask.color}");
 
           await widget.database.setTask(newTask);
           Navigator.of(context).pop();
@@ -122,6 +123,22 @@ class _EditTaskPageState extends State<EditTaskPage> {
         );
       }
     }
+  }
+
+  selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
+    );
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = Timestamp.fromDate(picked);
+        print("---> selectedDate: $selectedDate");
+      });
+
+    //widget.task.doingDate = Timestamp.fromDate(selectedDate);
   }
 
   @override
@@ -146,7 +163,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.calendar_today, color: Colors.black),
-            onPressed: null,
+            onPressed: () => selectDate(context),
           ),
           IconButton(
             icon: Icon(Icons.save, color: Colors.black),
@@ -193,7 +210,6 @@ class _EditTaskPageState extends State<EditTaskPage> {
   }
 
   Container _buildContainerWithColorCircles(bool flag) {
-    print('==> flag is $flag');
     // return StreamBuilder(
     //     initialData: false,
     //     stream: widget.bloc.colorCircleStream,
@@ -276,7 +292,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
             width: 5,
           ),
           Text(
-            convertFromTimeStampToString(widget.task.doingDate),
+            convertFromTimeStampToString(selectedDate),
             style: GoogleFonts.alice(
               textStyle: TextStyle(color: Colors.black, fontSize: 14),
             ),
@@ -311,30 +327,29 @@ class _EditTaskPageState extends State<EditTaskPage> {
   Container _buildArrowForExpanding(bool flag) {
     return Container(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Создано: ${convertFromTimeStampToString(creationDate)}",
-                style: GoogleFonts.alice(
-                  textStyle: TextStyle(color: Colors.black, fontSize: 14),
-                ),
-              ),
-              Text(
-                "Изменено: ${convertFromTimeStampToString(doingDate)}",
-                style: GoogleFonts.alice(
-                  textStyle: TextStyle(color: Colors.black, fontSize: 14),
-                ),
-              ),
-            ],
-          ),
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: [
+          //     Text(
+          //       "Создано: ${convertFromTimeStampToString(creationDate)}",
+          //       style: GoogleFonts.alice(
+          //         textStyle: TextStyle(color: Colors.black, fontSize: 14),
+          //       ),
+          //     ),
+          //     Text(
+          //       "Изменено: ${convertFromTimeStampToString(doingDate)}",
+          //       style: GoogleFonts.alice(
+          //         textStyle: TextStyle(color: Colors.black, fontSize: 14),
+          //       ),
+          //     ),
+          //   ],
+          // ),
           !flag
               ? IconButton(
                   icon: Icon(Icons.arrow_drop_down),
                   onPressed: () {
-                    print("==> try to sink .visible");
                     widget.bloc.eventColorCircleSink
                         .add(ColorCircleEvent.visible);
                     // setState(() {
@@ -386,10 +401,8 @@ class _EditTaskPageState extends State<EditTaskPage> {
       child: InkWell(
         onTap: () {
           setState(() {
-            print("==>1 memo: $_memo");
-            print("==>textController.text: ${_textController.text}");
             _memo = _textController.text;
-            print("==>2 memo: $_memo");
+
             currentColor = myColor;
             widget.task.color = convertColorToString(currentColor);
           });

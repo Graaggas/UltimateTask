@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:ultimate_task/misc/constants.dart';
 import 'package:ultimate_task/misc/converts.dart';
 import 'package:ultimate_task/screens/home_screen/models/task.dart';
 import 'package:ultimate_task/service/database.dart';
@@ -155,10 +154,10 @@ class _TaskListTileState extends State<TaskListTile> {
             ),
           ),
           Divider(),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: InkWell(
-              onTap: widget.onTap,
+          InkWell(
+            onTap: widget.onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Container(
                 width: double.infinity,
                 child: Text(

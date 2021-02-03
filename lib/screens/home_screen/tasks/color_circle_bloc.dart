@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:async';
 
 enum ColorCircleEvent { visible, invisible }
 
@@ -20,11 +19,9 @@ class ColorCircleBloc {
 
   void _mapEventToBool(ColorCircleEvent event) {
     if (event == ColorCircleEvent.visible) {
-      print("==> _boolStateSink = true");
       _boolStateSink.add(true);
     }
     if (event == ColorCircleEvent.invisible) {
-      print("==> _boolStateSink = false");
       _boolStateSink.add(false);
     }
   }
