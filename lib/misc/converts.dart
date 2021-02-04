@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-String convertFromTimeStampToString(Timestamp date) =>
-    DateFormat("dd.MM.yyyy").format(date.toDate()).toString();
+String convertFromDateTimeToString(DateTime date) =>
+    DateFormat("dd.MM.yyyy").format(date).toString();
 
 String convertColorToString(Color currentColor) {
   RegExp reg = RegExp('primary');

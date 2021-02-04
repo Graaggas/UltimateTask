@@ -46,7 +46,7 @@ class EditTaskPage extends StatefulWidget {
 }
 
 class _EditTaskPageState extends State<EditTaskPage> {
-  Timestamp selectedDate = Timestamp.fromDate(DateTime.now());
+  DateTime selectedDate = DateTime.now();
 
   final _textController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -56,9 +56,9 @@ class _EditTaskPageState extends State<EditTaskPage> {
   String _memo = "";
   bool isDeleted = false;
   bool outOfDate = false;
-  Timestamp doingDate = Timestamp.fromDate(DateTime.now());
-  Timestamp creationDate = Timestamp.fromDate(DateTime.now());
-  Timestamp lastEditDate = Timestamp.fromDate(DateTime.now());
+  DateTime doingDate = DateTime.now();
+  DateTime creationDate = DateTime.now();
+  DateTime lastEditDate = DateTime.now();
 
   @override
   void dispose() {
@@ -107,7 +107,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
             doingDate: selectedDate,
             id: uid,
             isDeleted: isDeleted,
-            lastEditDate: Timestamp.fromDate(DateTime.now()),
+            lastEditDate: DateTime.now(),
             memo: _memo,
             outOfDate: outOfDate,
           );
@@ -134,7 +134,7 @@ class _EditTaskPageState extends State<EditTaskPage> {
     );
     if (picked != null && picked != selectedDate)
       setState(() {
-        selectedDate = Timestamp.fromDate(picked);
+        selectedDate = picked;
         print("---> selectedDate: $selectedDate");
       });
 
@@ -292,9 +292,9 @@ class _EditTaskPageState extends State<EditTaskPage> {
             width: 5,
           ),
           Text(
-            convertFromTimeStampToString(selectedDate),
+            convertFromDateTimeToString(selectedDate),
             style: GoogleFonts.alice(
-              textStyle: TextStyle(color: Colors.black, fontSize: 14),
+              textStyle: TextStyle(color: Colors.black, fontSize: 18),
             ),
           ),
         ],

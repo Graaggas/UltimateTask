@@ -67,7 +67,7 @@ class _TaskListTileState extends State<TaskListTile> {
         final taskNew = Task(
           color: widget.task.color,
           creationDate: widget.task.creationDate,
-          doingDate: Timestamp.fromDate(selectedDate),
+          doingDate: selectedDate,
           id: widget.task.id,
           isDeleted: false,
           lastEditDate: widget.task.lastEditDate,
@@ -112,7 +112,7 @@ class _TaskListTileState extends State<TaskListTile> {
                   width: 10,
                 ),
                 Text(
-                  convertFromTimeStampToString(widget.task.doingDate),
+                  convertFromDateTimeToString(widget.task.doingDate),
                   style: GoogleFonts.alice(
                     textStyle: TextStyle(color: Colors.black, fontSize: 18),
                   ),

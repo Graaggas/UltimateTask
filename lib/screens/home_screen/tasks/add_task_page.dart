@@ -36,9 +36,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
   bool isColorCirclesVisible = false;
   Color currentColor = Colors.white;
 
-  Timestamp doingDate = Timestamp.fromDate(DateTime.now());
-  Timestamp creationDate = Timestamp.fromDate(DateTime.now());
-  Timestamp lastEditDate = Timestamp.fromDate(DateTime.now());
+  DateTime doingDate = DateTime.now();
+  DateTime creationDate = DateTime.now();
+  DateTime lastEditDate = DateTime.now();
 
   DateTime selectedDate = DateTime.now();
   final _formKey = GlobalKey<FormState>();
@@ -58,19 +58,16 @@ class _AddTaskPageState extends State<AddTaskPage> {
     if (_validateAndSaveForm()) {
       final task = Task(
         color: convertColorToString(currentColor),
-        creationDate: Timestamp.fromDate(DateTime.now()),
-        doingDate: selectedDate == DateTime.now()
-            ? Timestamp.fromDate(DateTime.now())
-            : Timestamp.fromDate(selectedDate),
+        creationDate: DateTime.now(),
+        doingDate:
+            selectedDate == DateTime.now() ? DateTime.now() : selectedDate,
         id: uid,
         isDeleted: false,
-        lastEditDate: Timestamp.fromDate(DateTime.now()),
+        lastEditDate: DateTime.now(),
         memo: _memo,
         outOfDate: false,
       );
 
-      print(
-          "saving doingDate:\t ${convertFromTimeStampToString(task.doingDate)}");
       await widget.database.createTask(task);
       showMessage(context, "Задача создана");
       Navigator.of(context).pop();

@@ -3,21 +3,23 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
+@HiveType(typeId: 1)
 class Task {
+  @HiveField(0)
   final String memo;
-
+  @HiveField(1)
   final String id;
-
-  Timestamp creationDate;
-
-  Timestamp doingDate;
-
-  Timestamp lastEditDate;
-
+  @HiveField(2)
+  DateTime creationDate;
+  @HiveField(3)
+  DateTime doingDate;
+  @HiveField(4)
+  DateTime lastEditDate;
+  @HiveField(5)
   String color;
-
+  @HiveField(6)
   bool outOfDate;
-
+  @HiveField(7)
   bool isDeleted;
 
   Task({
@@ -37,9 +39,9 @@ class Task {
     } else {
       final String memo = data['memo'];
       final String id = data['id'];
-      final Timestamp creationDate = data['creationDate'];
-      final Timestamp doingDate = data['doingDate'];
-      final Timestamp lastEditDate = data['lastEditDate'];
+      final DateTime creationDate = data['creationDate'].toDate();
+      final DateTime doingDate = data['doingDate'].toDate();
+      final DateTime lastEditDate = data['lastEditDate'].toDate();
       final String color = data['color'];
       final bool outOfDate = data['outOfDate'];
       final bool isDeleted = data['isDeleted'];
@@ -60,9 +62,9 @@ class Task {
     return {
       'memo': memo,
       'id': id,
-      'creationDate': creationDate,
-      'doingDate': doingDate,
-      'lastEditDate': lastEditDate,
+      'creationDate': Timestamp.fromDate(creationDate),
+      'doingDate': Timestamp.fromDate(doingDate),
+      'lastEditDate': Timestamp.fromDate(lastEditDate),
       'color': color,
       'outOfDate': outOfDate,
       'isDeleted': isDeleted,
