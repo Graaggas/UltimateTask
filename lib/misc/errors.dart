@@ -3,6 +3,7 @@ String errorsCheck(String error) {
     print("=> $error");
     return "Неверный формат почтового адреса";
   }
+
   if (error.contains(
       "The password is invalid or the user does not have a password")) {
     print("=> $error");

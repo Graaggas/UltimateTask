@@ -1,15 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class Task {
   final String memo;
+
   final String id;
+
   Timestamp creationDate;
+
   Timestamp doingDate;
+
   Timestamp lastEditDate;
+
   String color;
+
   bool outOfDate;
+
   bool isDeleted;
 
   Task({
@@ -26,25 +34,26 @@ class Task {
   factory Task.fromMap(Map<String, dynamic> data) {
     if (data == null) {
       return null;
+    } else {
+      final String memo = data['memo'];
+      final String id = data['id'];
+      final Timestamp creationDate = data['creationDate'];
+      final Timestamp doingDate = data['doingDate'];
+      final Timestamp lastEditDate = data['lastEditDate'];
+      final String color = data['color'];
+      final bool outOfDate = data['outOfDate'];
+      final bool isDeleted = data['isDeleted'];
+      return Task(
+        memo: memo,
+        id: id,
+        creationDate: creationDate,
+        doingDate: doingDate,
+        lastEditDate: lastEditDate,
+        color: color,
+        outOfDate: outOfDate,
+        isDeleted: isDeleted,
+      );
     }
-    final String memo = data['memo'];
-    final String id = data['id'];
-    final Timestamp creationDate = data['creationDate'];
-    final Timestamp doingDate = data['doingDate'];
-    final Timestamp lastEditDate = data['lastEditDate'];
-    final String color = data['color'];
-    final bool outOfDate = data['outOfDate'];
-    final bool isDeleted = data['isDeleted'];
-    return Task(
-      memo: memo,
-      id: id,
-      creationDate: creationDate,
-      doingDate: doingDate,
-      lastEditDate: lastEditDate,
-      color: color,
-      outOfDate: outOfDate,
-      isDeleted: isDeleted,
-    );
   }
 
   Map<String, dynamic> toMap() {

@@ -45,12 +45,15 @@ class SignInPage extends StatelessWidget {
     try {
       await manager.signInWithGoogle();
     } catch (e) {
-      //print("~~~~~~> " + e.toString());
+      print("~~~~~~> " + e.toString());
       showExceptionAlertDialog(
         context,
         title: 'Ошибка аутентификации',
         exception: e,
       );
+      if (e.toString().contains("network_error")) {
+        //TODO Значит, нет соединения с интернетом.
+      }
     }
   }
 

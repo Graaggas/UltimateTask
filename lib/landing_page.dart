@@ -12,6 +12,7 @@ class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthBase>(context, listen: false);
+
     return StreamBuilder(
       stream: auth.authStateChanges(),
       builder: (context, snapshot) {
@@ -24,7 +25,9 @@ class LandingPage extends StatelessWidget {
             return SignInPage.create(context);
           }
           return Provider<Database>(
-            create: (_) => FirestoreDatabase(uid: user.uid),
+            create: (_) => FirestoreDatabase(
+              uid: user.uid,
+            ),
             child: TasksPage(),
           );
         }
