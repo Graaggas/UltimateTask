@@ -32,7 +32,9 @@ Future<void> _delete(
     final database = Provider.of<Database>(context, listen: false);
     showMessage(
         context, isFinalDeleting ? "Задача удалена" : "Задача завершена");
-    await database.deleteTask(task);
+
+    //! await убираем
+    database.deleteTask(task);
   } on FirebaseException catch (e) {
     showExceptionAlertDialog(context, title: "Operation failed", exception: e);
   }

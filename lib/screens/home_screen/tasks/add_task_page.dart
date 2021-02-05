@@ -68,7 +68,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
         outOfDate: false,
       );
 
-      await widget.database.createTask(task);
+      //! await убираем
+      widget.database.createTask(task);
       showMessage(context, "Задача создана");
       Navigator.of(context).pop();
     }
