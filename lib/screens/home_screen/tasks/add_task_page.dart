@@ -253,11 +253,10 @@ class _AddTaskPageState extends State<AddTaskPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        buildExpandedCircleColor(Colors.red[200]),
-        buildExpandedCircleColor(Colors.amber[200]),
-        buildExpandedCircleColor(Colors.blue[200]),
+        buildExpandedCircleColor(Color(0xFF7389AE)),
+        buildExpandedCircleColor(Color(0xFF81D2C7)),
         buildExpandedCircleColor(Colors.cyan[200]),
-        buildExpandedCircleColor(Colors.grey),
+        buildExpandedCircleColor(Color(0xFFF87060)),
         buildExpandedCircleColor(Colors.white),
       ],
     );

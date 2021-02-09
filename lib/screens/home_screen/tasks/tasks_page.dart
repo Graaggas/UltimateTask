@@ -49,6 +49,7 @@ class TasksPage extends StatefulWidget {
 
 class _TasksPageState extends State<TasksPage> {
   bool isSwitched = false;
+  bool isAnythingForDeleting = false;
 
   Future<void> _signOut(BuildContext context) async {
     try {
@@ -118,7 +119,7 @@ class _TasksPageState extends State<TasksPage> {
               ),
             ),
             Text(
-              isSwitched ? "Завершенные задачи" : "Текущие задачи",
+              isSwitched ? "Завершенные" : "Текущие задачи",
               style: GoogleFonts.alice(
                 textStyle: TextStyle(color: Colors.black87, fontSize: 18),
               ),
@@ -156,37 +157,39 @@ class _TasksPageState extends State<TasksPage> {
             )
           : FloatingActionButton(
               onPressed: () async {
-                Alert(
-                  context: context,
-                  type: AlertType.warning,
-                  title: "Удаление задач",
-                  desc: "Удалить завершенные задачи?",
-                  buttons: [
-                    DialogButton(
-                      child: Text(
-                        "Отмена",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
+                if (isAnythingForDeleting) {
+                  Alert(
+                    context: context,
+                    type: AlertType.warning,
+                    title: "Удаление задач",
+                    desc: "Удалить завершенные задачи?",
+                    buttons: [
+                      DialogButton(
+                        child: Text(
+                          "Отмена",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                        width: 120,
                       ),
-                      onPressed: () => Navigator.pop(context),
-                      width: 120,
-                    ),
-                    DialogButton(
-                      color: Colors.red,
-                      child: Text(
-                        "Удалить",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                      onPressed: () {
-                        final database =
-                            Provider.of<Database>(context, listen: false);
-                        database.deleteAllDone();
-                        showMessage(context, "Завершенные задачи удалены");
-                        Navigator.of(context).pop(true);
-                      },
-                      width: 120,
-                    )
-                  ],
-                ).show();
+                      DialogButton(
+                        color: Colors.red,
+                        child: Text(
+                          "Удалить",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        onPressed: () {
+                          final database =
+                              Provider.of<Database>(context, listen: false);
+                          database.deleteAllDone();
+                          showMessage(context, "Завершенные задачи удалены");
+                          Navigator.of(context).pop(true);
+                        },
+                        width: 120,
+                      )
+                    ],
+                  ).show();
+                }
                 // final finalDeleting = await showAlertDialog(context,
                 //     title: "Удаление задач",
                 //     content: "Удалить все задачи?",
@@ -271,8 +274,10 @@ class _TasksPageState extends State<TasksPage> {
             case true:
               if (doneTasks.isNotEmpty) {
                 final children = getChildren(doneTasks);
-
+                isAnythingForDeleting = true;
                 return ListView(children: children);
+              } else {
+                isAnythingForDeleting = false;
               }
               break;
             case false:
@@ -289,7 +294,7 @@ class _TasksPageState extends State<TasksPage> {
           return !isSwitched
               ? EmptyContent()
               : EmptyContent(
-                  title: 'Список завершенных задач пуст',
+                  title: 'Завершенные задачи',
                   message: '',
                 );
         }
