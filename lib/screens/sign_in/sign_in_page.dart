@@ -1,9 +1,12 @@
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:ultimate_task/misc/constants.dart';
+import 'package:ultimate_task/misc/errors.dart';
 import 'package:ultimate_task/misc/show_exception_dialog.dart';
 import 'package:ultimate_task/screens/sign_in/email_sign_in_page.dart';
 import 'package:ultimate_task/screens/sign_in/sign_in_manager.dart';
@@ -46,11 +49,28 @@ class SignInPage extends StatelessWidget {
       await manager.signInWithGoogle();
     } catch (e) {
       print("~~~~~~> " + e.toString());
-      showExceptionAlertDialog(
-        context,
+      // showExceptionAlertDialog(
+      //   context,
+      //   title: 'Ошибка аутентификации',
+      //   exception: e,
+      // );
+      Alert(
+        context: context,
+        type: AlertType.error,
         title: 'Ошибка аутентификации',
-        exception: e,
-      );
+        desc: e is FirebaseException
+            ? errorsCheck(e.message)
+            : "Нет интернет-соединения",
+        buttons: [
+          DialogButton(
+            child: Text(
+              "Ok",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+        ],
+      ).show();
       if (e.toString().contains("network_error")) {
         //TODO Значит, нет соединения с интернетом.
       }

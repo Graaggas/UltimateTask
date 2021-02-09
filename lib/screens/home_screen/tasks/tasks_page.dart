@@ -14,6 +14,7 @@ import 'package:ultimate_task/screens/home_screen/tasks/empty_content.dart';
 import 'package:ultimate_task/screens/home_screen/tasks/task_list_tile.dart';
 import 'package:ultimate_task/service/auth.dart';
 import 'package:ultimate_task/service/database.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 extension ColorExtension on String {
   toColor() {
@@ -59,16 +60,44 @@ class _TasksPageState extends State<TasksPage> {
   }
 
   Future<void> _confirmSignOut(BuildContext context, String user) async {
-    final didRequestSignOut = await showAlertDialog(
-      context,
-      title: 'Logout',
-      content: 'Выйти из учетной записи "$user"?',
-      cancelActionText: 'Отмена',
-      defaultActionText: 'Выход',
-    );
-    if (didRequestSignOut == true) {
-      _signOut(context);
-    }
+    // final didRequestSignOut = await showAlertDialog(
+    //   context,
+    //   title: 'Logout',
+    //   content: 'Выйти из учетной записи "$user"?',
+    //   cancelActionText: 'Отмена',
+    //   defaultActionText: 'Выход',
+    // );
+    // if (didRequestSignOut == true) {
+    //   _signOut(context);
+    // }
+    Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "Logout",
+      desc: "Выйти из учетной записи $user?",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Отмена",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+        ),
+        DialogButton(
+          color: Colors.red,
+          child: Text(
+            "Выход",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            _signOut(context);
+            Navigator.of(context).pop(true);
+          },
+          width: 120,
+        )
+      ],
+    ).show();
   }
 
   @override
@@ -121,24 +150,52 @@ class _TasksPageState extends State<TasksPage> {
       ),
       floatingActionButton: !isSwitched
           ? FloatingActionButton(
-              backgroundColor: Color(myDarkMintColor),
+              backgroundColor: Color(mySecondaryColor),
               child: Icon(Icons.add),
               onPressed: () => AddTaskPage.show(context),
             )
           : FloatingActionButton(
               onPressed: () async {
-                final finalDeleting = await showAlertDialog(context,
-                    title: "Удаление задач",
-                    content: "Удалить все задачи?",
-                    defaultActionText: "Удалить",
-                    cancelActionText: "Отмена");
+                Alert(
+                  context: context,
+                  type: AlertType.warning,
+                  title: "Удаление задач",
+                  desc: "Удалить завершенные задачи?",
+                  buttons: [
+                    DialogButton(
+                      child: Text(
+                        "Отмена",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                      width: 120,
+                    ),
+                    DialogButton(
+                      color: Colors.red,
+                      child: Text(
+                        "Удалить",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      onPressed: () {
+                        final database =
+                            Provider.of<Database>(context, listen: false);
+                        database.deleteAllDone();
+                        showMessage(context, "Завершенные задачи удалены");
+                        Navigator.of(context).pop(true);
+                      },
+                      width: 120,
+                    )
+                  ],
+                ).show();
+                // final finalDeleting = await showAlertDialog(context,
+                //     title: "Удаление задач",
+                //     content: "Удалить все задачи?",
+                //     defaultActionText: "Удалить",
+                //     cancelActionText: "Отмена");
 
-                if (finalDeleting == true) {
-                  final database =
-                      Provider.of<Database>(context, listen: false);
-                  database.deleteAllDone();
-                  showMessage(context, "Все задачи удалены");
-                }
+                // if (finalDeleting == true) {
+                //
+                // }
               },
               backgroundColor: Color(myRedColor),
               child: Icon(
