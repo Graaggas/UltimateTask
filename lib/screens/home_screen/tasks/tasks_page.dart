@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ultimate_task/misc/constants.dart';
-import 'package:ultimate_task/misc/show_alert_dialog.dart';
+
 import 'package:ultimate_task/misc/show_exception_dialog.dart';
 import 'package:ultimate_task/misc/show_message.dart';
 import 'package:ultimate_task/screens/home_screen/models/task.dart';
@@ -49,7 +49,7 @@ class TasksPage extends StatefulWidget {
 
 class _TasksPageState extends State<TasksPage> {
   bool isSwitched = false;
-  bool isAnythingForDeleting = false;
+  bool isAnythingForDone = false;
 
   Future<void> _signOut(BuildContext context) async {
     try {
@@ -151,17 +151,17 @@ class _TasksPageState extends State<TasksPage> {
       ),
       floatingActionButton: !isSwitched
           ? FloatingActionButton(
-              backgroundColor: Color(mySecondaryColor),
+              backgroundColor: Color(myBlackLightColor),
               child: Icon(Icons.add),
               onPressed: () => AddTaskPage.show(context),
             )
           : FloatingActionButton(
               onPressed: () async {
-                if (isAnythingForDeleting) {
+                if (isAnythingForDone) {
                   Alert(
                     context: context,
                     type: AlertType.warning,
-                    title: "Удаление задач",
+                    title: "",
                     desc: "Удалить завершенные задачи?",
                     buttons: [
                       DialogButton(
@@ -274,10 +274,10 @@ class _TasksPageState extends State<TasksPage> {
             case true:
               if (doneTasks.isNotEmpty) {
                 final children = getChildren(doneTasks);
-                isAnythingForDeleting = true;
+                isAnythingForDone = true;
                 return ListView(children: children);
               } else {
-                isAnythingForDeleting = false;
+                isAnythingForDone = false;
               }
               break;
             case false:

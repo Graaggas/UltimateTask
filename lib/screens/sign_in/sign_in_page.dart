@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:ultimate_task/misc/constants.dart';
 import 'package:ultimate_task/misc/errors.dart';
-import 'package:ultimate_task/misc/show_exception_dialog.dart';
 import 'package:ultimate_task/screens/sign_in/email_sign_in_page.dart';
 import 'package:ultimate_task/screens/sign_in/sign_in_manager.dart';
 import 'package:ultimate_task/service/auth.dart';

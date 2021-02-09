@@ -38,6 +38,8 @@ dependencies:
   hive_flutter: ^0.3.1
   path_provider: ^1.6.27
   rflutter_alert: ^1.1.0
+  # flutter_launcher_icons: ^0.8.1
+  
  
   
   
@@ -52,6 +54,11 @@ dev_dependencies:
   build_runner: ^1.11.1
   flutter_test:
     sdk: flutter
+
+# flutter_icons:
+  # android: true
+  #ios: true
+ # image_path: "assets/icons/ic_launcher.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -68,6 +75,8 @@ flutter:
    - assets/icons/calendar.svg
    - assets/icons/done.svg
    - assets/icons/fromtrash.svg
+   - assets/icons/logo.svg
+   - assets/icons/UT.svg
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
