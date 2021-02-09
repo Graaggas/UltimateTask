@@ -7,7 +7,7 @@ class EmptyContent extends StatelessWidget {
 
   const EmptyContent({
     Key key,
-    this.title = "Список задач еще пустой",
+    this.title = "Список задач пуст",
     this.message = "Добавьте новую задачу",
   }) : super(key: key);
 

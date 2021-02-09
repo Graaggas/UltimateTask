@@ -1,7 +1,6 @@
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ultimate_task/misc/constants.dart';
 
 void showMessage(BuildContext context, String message) {
   showFlash(
@@ -10,7 +9,7 @@ void showMessage(BuildContext context, String message) {
       duration: const Duration(seconds: 2),
       builder: (context, controller) {
         return Flash(
-          backgroundColor: Color(myBlueLightColor),
+          backgroundColor: Colors.red,
           brightness: Brightness.light,
           barrierBlur: 3.0,
           barrierColor: Colors.black38,

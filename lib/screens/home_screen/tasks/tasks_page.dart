@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +32,7 @@ Future<void> _delete(
   try {
     final database = Provider.of<Database>(context, listen: false);
     showMessage(
-        context, isFinalDeleting ? "Задача удалена" : "Задача завершена");
+        context, isFinalDeleting ? "Задача завершена" : "Задача удалена");
 
     //! await убираем
     database.deleteTask(task);
@@ -61,7 +62,7 @@ class _TasksPageState extends State<TasksPage> {
     final didRequestSignOut = await showAlertDialog(
       context,
       title: 'Logout',
-      content: 'Вы действительно хотите выйти из учетной записи "$user"?',
+      content: 'Выйти из учетной записи "$user"?',
       cancelActionText: 'Отмена',
       defaultActionText: 'Выход',
     );
@@ -124,7 +125,27 @@ class _TasksPageState extends State<TasksPage> {
               child: Icon(Icons.add),
               onPressed: () => AddTaskPage.show(context),
             )
-          : null,
+          : FloatingActionButton(
+              onPressed: () async {
+                final finalDeleting = await showAlertDialog(context,
+                    title: "Удаление задач",
+                    content: "Удалить все задачи?",
+                    defaultActionText: "Удалить",
+                    cancelActionText: "Отмена");
+
+                if (finalDeleting == true) {
+                  final database =
+                      Provider.of<Database>(context, listen: false);
+                  database.deleteAllDone();
+                  showMessage(context, "Все задачи удалены");
+                }
+              },
+              backgroundColor: Color(myRedColor),
+              child: Icon(
+                Icons.delete_sharp,
+                color: Colors.black,
+              ),
+            ),
       body: _buildContexts(context),
     );
   }

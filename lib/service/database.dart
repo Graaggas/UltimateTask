@@ -9,6 +9,7 @@ abstract class Database {
   Future<void> createTask(Task task);
   Stream<List<Task>> tasksStream();
   Future<void> setTask(Task task);
+  Future<void> deleteAllDone();
 }
 
 class FirestoreDatabase implements Database {
@@ -21,6 +22,10 @@ class FirestoreDatabase implements Database {
   @override
   Future<void> deleteTask(Task task) =>
       _service.deleteData(path: APIpath.task(uid, task.id));
+
+  @override
+  Future<void> deleteAllDone() =>
+      _service.deleteAllDone(path: APIpath.tasks(uid));
 
   @override
   Future<void> createTask(Task task) {
